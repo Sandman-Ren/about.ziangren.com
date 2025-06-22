@@ -101,7 +101,7 @@ export default function Home() {
       {/* Footer Section */}
       <footer className="pt-6 text-center">
         <p className="text-secondary text-sm">
-          &copy; 2025 Ziang Ren. All rights reserved.
+          &copy; {new Date().getFullYear()} Ziang Ren. All rights reserved.
         </p>
       </footer>
     </div>
