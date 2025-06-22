@@ -1,9 +1,17 @@
-name: Deploy to GitHub Pages
+name: Reusable Deploy Workflow
 
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      repository:
+        required: true
+        type: string
+    secrets:
+      github_token:
+        required: true
 
 jobs:
   checkout-code:
@@ -12,6 +20,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.branch }}
 
   setup-node:
     needs: checkout-code
@@ -42,5 +53,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.github_token }}
           publish_dir: ./out
