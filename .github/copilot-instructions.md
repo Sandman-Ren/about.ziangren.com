@@ -39,3 +39,21 @@ These are coding conventions and preferences to follow in this project, powered 
 
 - You must maintain a `context.md` at the root of the project. At appropriate times, you should update the `context.md` file to reflect the current state of the project.
 - Use the `context.md` file to document important decisions, architectural changes, and any other relevant information that helps maintain the project.
+- You must keep a log of our conversations in a MarkDown file. The name of the file should be the current date in the format `YYYY-MM-DD.md`. For example, if today is October 1, 2023, the file should be named `2023-10-01.md`. Create the file if it does not exist. Each time I prompt you, you must append the conversation to this file.
+- Use the following format for each entry:
+  ```markdown
+  ## YYYY-MM-DD
+
+  ### Conversation YYYY-MM-DDTHH:MM:SSZ
+  - User: [Your message]
+  - Copilot: [My response]
+
+  ### Conversation YYYY-MM-DDTHH:MM:SSZ 
+  - User: [Your message]
+  - Copilot: [My response]
+
+  ... (repeat as necessary for each conversation)
+
+  ### Context
+  - [Any relevant context or decisions made during the conversation]
+  ```
