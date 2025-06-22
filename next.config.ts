@@ -12,11 +12,11 @@ const withMDX = createMDX({
 /** @type {import('next').NextConfig} */
 const nextConfig = withMDX({
   output: "export", // set output to export for static site generation
-  basePath: "/about.ziangren.com",
+  // basePath removed since the site is at the domain root
   reactStrictMode: true,
 
   // configure page extension to include markdown and mdx files
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
 });
 
-export default withMDX(nextConfig);
+export default nextConfig;
