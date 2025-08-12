@@ -1,3 +1,6 @@
+---
+applyTo: '**'
+---
 # Copilot Instructions for About.ziangren.com Revamp Project
 
 ## Conversation Logging
