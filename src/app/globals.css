@@ -70,4 +70,8 @@
     font-weight: 600;
     letter-spacing: 0.5px;
   }
+  
+  .boogaloo-font {
+    font-family: var(--font-boogaloo), cursive;
+  }
 }

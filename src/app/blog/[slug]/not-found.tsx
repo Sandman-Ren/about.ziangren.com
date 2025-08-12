@@ -4,12 +4,12 @@ import { Home, ArrowLeft } from 'lucide-react'
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-[calc(100vh-theme(spacing.14)-theme(spacing.24))] bg-background flex items-center justify-center px-4">
       <div className="text-center space-y-6 max-w-md">
         <div className="space-y-2">
-          <h1 className="text-6xl font-bold tracking-tight">404</h1>
-          <h2 className="text-2xl font-semibold">Blog Post Not Found</h2>
-          <p className="text-muted-foreground">
+          <h1 className="text-5xl font-bold tracking-tight">404</h1>
+          <h2 className="text-xl font-semibold">Blog Post Not Found</h2>
+          <p className="text-muted-foreground text-sm">
             The blog post you&apos;re looking for doesn&apos;t exist or may have been moved.
           </p>
         </div>

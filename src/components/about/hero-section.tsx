@@ -56,41 +56,43 @@ function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
     <motion.div
       initial={{ 
         opacity: 0, 
-        scale: 0.3,
-        x: 20,
-        y: 10,
-        rotate: -15
+        scale: 0.1,
+        y: -10
       }}
       animate={{ 
         opacity: 1, 
         scale: 1,
-        x: 0,
-        y: 0,
-        rotate: 0
+        y: 0
       }}
       exit={{ 
         opacity: 0, 
-        scale: 0.2,
-        x: 30,
-        y: -20,
-        rotate: 15
+        scale: 0.1,
+        y: -10
       }}
       transition={{ 
         type: "spring",
-        stiffness: 400,
-        damping: 25,
-        duration: 0.6
+        stiffness: 500,
+        damping: 20,
+        mass: 0.8
       }}
-      className="absolute -top-4 -right-4 z-20 transform origin-bottom-left"
+      className="absolute -top-2 left-full ml-2 z-20 pointer-events-auto"
+      style={{
+        transformOrigin: "bottom left"
+      }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className="relative bg-background border-2 border-primary/20 rounded-lg px-3 py-2 shadow-xl max-w-[200px] min-w-[120px]">
-        <p className="text-sm text-foreground font-medium leading-relaxed game-quote-font">
-          {quote}
-        </p>
-        <div className="absolute top-full left-4 w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-primary/20"></div>
-        <div className="absolute top-full left-4 translate-y-[-2px] w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-background"></div>
+      <div className="relative mt-2">
+        {/* Main bubble content */}
+        <div className="bg-gradient-to-br from-background to-background/90 border-2 border-primary/40 rounded-2xl px-5 py-4 shadow-xl shadow-primary/10 max-w-[480px] min-w-[200px] relative overflow-hidden backdrop-blur-sm">
+          {/* Inner glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent rounded-2xl"></div>
+          
+          {/* Text content */}
+          <p className="text-xl sm:text-2xl font-semibold tracking-wide text-foreground leading-relaxed boogaloo-font whitespace-nowrap relative z-10">
+            {quote}
+          </p>
+        </div>
       </div>
     </motion.div>
   )
@@ -185,7 +187,7 @@ export function HeroSection() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="relative">
+          <div className="relative inline-block">
             <motion.div
               whileTap={{ 
                 scale: 0.85,
