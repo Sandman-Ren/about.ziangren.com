@@ -1,7 +1,7 @@
 # Copilot Instructions for About.ziangren.com Revamp Project
 
 ## Conversation Logging
-- Log all conversations verbatim using a fixed format
+- Log all conversations verbatim using a fixed format to `docs/conversations/YYYY-MM-DD.md` where `YYYY-MM-DD` is the date of the conversation
 - Use the following format for conversation entries:
   ```
   ## [TIMESTAMP] - [USER/ASSISTANT]
