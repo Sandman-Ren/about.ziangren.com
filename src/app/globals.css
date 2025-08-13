@@ -1,6 +1,9 @@
 /* Import highlight.js theme for code syntax highlighting */
 @import 'highlight.js/styles/github.css';
 
+/* Import gaming fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Exo+2:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -58,5 +61,13 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .game-quote-font {
+    font-family: "Orbitron", "Exo 2", "Rajdhani", monospace;
+    font-weight: 600;
+    letter-spacing: 0.5px;
   }
 }

@@ -1,11 +1,14 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, MapPin } from "lucide-react"
+
+// Timeout constant for bubble auto-hide
+const BUBBLE_TIMEOUT = 3000 // 3 seconds
 
 // Game quotes database
 const gameQuotes = [
@@ -36,25 +39,58 @@ const gameQuotes = [
   "Dabu!",
   "Me not that kind of orc!",
   "Stop poking me!",
+  "Ready to serve!",
+  "Off I go then!",
+  "What joy!",
+  "I hear and obey!",
 ]
 
 interface ChatBubbleProps {
   quote: string
+  onMouseEnter: () => void
+  onMouseLeave: () => void
 }
 
-function ChatBubble({ quote }: ChatBubbleProps) {
+function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8, y: -20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.8, y: -20 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="absolute -top-16 left-1/2 transform -translate-x-1/2 z-10"
+      initial={{ 
+        opacity: 0, 
+        scale: 0.3,
+        x: 20,
+        y: 10,
+        rotate: -15
+      }}
+      animate={{ 
+        opacity: 1, 
+        scale: 1,
+        x: 0,
+        y: 0,
+        rotate: 0
+      }}
+      exit={{ 
+        opacity: 0, 
+        scale: 0.2,
+        x: 30,
+        y: -20,
+        rotate: 15
+      }}
+      transition={{ 
+        type: "spring",
+        stiffness: 400,
+        damping: 25,
+        duration: 0.6
+      }}
+      className="absolute -top-4 -right-4 z-20 transform origin-bottom-left"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
-      <div className="relative bg-background border border-border rounded-lg px-4 py-2 shadow-lg max-w-xs">
-        <p className="text-sm text-foreground font-medium">{quote}</p>
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-border"></div>
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 translate-y-[-1px] w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-background"></div>
+      <div className="relative bg-background border-2 border-primary/20 rounded-lg px-3 py-2 shadow-xl max-w-[200px] min-w-[120px]">
+        <p className="text-sm text-foreground font-medium leading-relaxed game-quote-font">
+          {quote}
+        </p>
+        <div className="absolute top-full left-4 w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-primary/20"></div>
+        <div className="absolute top-full left-4 translate-y-[-2px] w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-background"></div>
       </div>
     </motion.div>
   )
@@ -63,8 +99,11 @@ function ChatBubble({ quote }: ChatBubbleProps) {
 export function HeroSection() {
   const [clickCount, setClickCount] = useState(0)
   const [lastClickTime, setLastClickTime] = useState(0)
+  const [isEasterEggEnabled, setIsEasterEggEnabled] = useState(false)
   const [showQuote, setShowQuote] = useState(false)
-  const [currentQuote, setCurrentQuote] = useState("")
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0)
+  const [isHovering, setIsHovering] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleAvatarClick = useCallback(() => {
     const now = Date.now()
@@ -78,19 +117,60 @@ export function HeroSection() {
     
     setLastClickTime(now)
     
-    // Trigger easter egg on 5th click within 3 seconds
-    if (clickCount >= 4 && now - lastClickTime <= 3000) {
-      const randomQuote = gameQuotes[Math.floor(Math.random() * gameQuotes.length)]
-      setCurrentQuote(randomQuote)
+    if (!isEasterEggEnabled) {
+      // Enable easter egg on 5th click within 3 seconds
+      if (clickCount >= 4 && now - lastClickTime <= 3000) {
+        setIsEasterEggEnabled(true)
+        setClickCount(0)
+        setCurrentQuoteIndex(0)
+        setShowQuote(true)
+        
+        // Start timeout for auto-hide
+        if (timeoutRef.current) clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(() => {
+          if (!isHovering) {
+            setShowQuote(false)
+          }
+        }, BUBBLE_TIMEOUT)
+      }
+    } else {
+      // Show next quote when easter egg is enabled
+      setCurrentQuoteIndex(prev => (prev + 1) % gameQuotes.length)
       setShowQuote(true)
-      setClickCount(0)
       
-      // Hide quote after 3 seconds
-      setTimeout(() => {
-        setShowQuote(false)
-      }, 3000)
+      // Start timeout for auto-hide
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => {
+        if (!isHovering) {
+          setShowQuote(false)
+        }
+      }, BUBBLE_TIMEOUT)
     }
-  }, [clickCount, lastClickTime])
+  }, [clickCount, lastClickTime, isEasterEggEnabled, isHovering])
+
+  const handleMouseEnter = useCallback(() => {
+    setIsHovering(true)
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovering(false)
+    // Start timeout when mouse leaves
+    timeoutRef.current = setTimeout(() => {
+      setShowQuote(false)
+    }, BUBBLE_TIMEOUT)
+  }, [])
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center px-4 py-16 overflow-hidden">
@@ -106,24 +186,40 @@ export function HeroSection() {
           transition={{ duration: 0.5 }}
         >
           <div className="relative">
-            <Avatar 
-              className="w-32 h-32 mx-auto cursor-pointer ring-4 ring-border hover:ring-primary/50 transition-all duration-300"
-              onClick={handleAvatarClick}
+            <motion.div
+              whileTap={{ 
+                scale: 0.85,
+                rotateZ: Math.random() > 0.5 ? 5 : -5
+              }}
+              transition={{ 
+                type: "spring",
+                stiffness: 500,
+                damping: 15
+              }}
             >
-              <AvatarImage 
-                src="/profile.svg" 
-                alt="Ziang Ren"
-                className="object-cover"
-              />
-              <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
-                ZR
-              </AvatarFallback>
-            </Avatar>
+              <Avatar 
+                className="w-32 h-32 mx-auto cursor-pointer ring-4 ring-border hover:ring-primary/50 transition-all duration-300 select-none"
+                onClick={handleAvatarClick}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <AvatarImage 
+                  src="/profile.svg" 
+                  alt="Ziang Ren"
+                  className="object-cover"
+                />
+                <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
+                  ZR
+                </AvatarFallback>
+              </Avatar>
+            </motion.div>
             
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
               {showQuote && (
                 <ChatBubble 
-                  quote={currentQuote} 
+                  quote={gameQuotes[currentQuoteIndex]}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                 />
               )}
             </AnimatePresence>
