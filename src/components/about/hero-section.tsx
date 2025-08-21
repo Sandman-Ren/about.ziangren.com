@@ -51,6 +51,34 @@ interface ChatBubbleProps {
   onMouseLeave: () => void
 }
 
+// SVG-based comic/game bubble with integrated notch (Option 2)
+function SvgBubble({ children }: { children: React.ReactNode }) {
+  return (
+  <div className="relative inline-block overflow-visible">
+      {/* Background shape with notch. Scales to content via viewBox. */}
+      <svg
+    className="absolute inset-0 -z-10 w-full h-full overflow-visible filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
+        viewBox="0 0 100 44"
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        <path
+      d="M8 2 H92 Q98 2 98 8 V32 Q98 38 92 38 H20 L8 44 L10 38 H8 Q2 38 2 32 V8 Q2 2 8 2 Z"
+          fill="hsl(var(--background) / 0.95)"
+          stroke="hsl(var(--foreground) / 0.15)"
+          strokeWidth="2"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+
+      {/* Content */}
+    <div className="px-6 py-4 flex items-center justify-start">
+        {children}
+      </div>
+    </div>
+  )
+}
+
 function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
   return (
     <motion.div
@@ -71,9 +99,9 @@ function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
       }}
       transition={{ 
         type: "spring",
-        stiffness: 500,
-        damping: 20,
-        mass: 0.8
+        stiffness: 700,
+        damping: 25,
+        mass: 0.8,
       }}
       className="absolute -top-2 left-full ml-2 z-20 pointer-events-auto"
       style={{
@@ -83,16 +111,12 @@ function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
       onMouseLeave={onMouseLeave}
     >
       <div className="relative mt-2">
-        {/* Main bubble content */}
-        <div className="bg-gradient-to-br from-background to-background/90 border-2 border-primary/40 rounded-2xl px-5 py-4 shadow-xl shadow-primary/10 max-w-[480px] min-w-[200px] relative overflow-hidden backdrop-blur-sm">
-          {/* Inner glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent rounded-2xl"></div>
-          
-          {/* Text content */}
-          <p className="text-xl sm:text-2xl font-semibold tracking-wide text-foreground leading-relaxed boogaloo-font whitespace-nowrap relative z-10">
+        {/* SVG bubble (option 2) */}
+        <SvgBubble>
+          <p dir="auto" className="pb-1 text-xl sm:text-2xl font-semibold tracking-wide text-foreground leading-relaxed boogaloo-font whitespace-nowrap text-left rtl:text-right relative z-10">
             {quote}
           </p>
-        </div>
+        </SvgBubble>
       </div>
     </motion.div>
   )
@@ -216,9 +240,10 @@ export function HeroSection() {
               </Avatar>
             </motion.div>
             
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               {showQuote && (
-                <ChatBubble 
+                <ChatBubble
+                  key={gameQuotes[currentQuoteIndex]}
                   quote={gameQuotes[currentQuoteIndex]}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
