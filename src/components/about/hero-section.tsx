@@ -103,7 +103,7 @@ function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
         damping: 25,
         mass: 0.8,
       }}
-      className="absolute -top-2 left-full ml-2 z-20 pointer-events-auto"
+  className="absolute bottom-full left-full -ml-8 -mb-8 z-20 pointer-events-auto"
       style={{
         transformOrigin: "bottom left"
       }}
