@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Calendar, Clock, Search, Filter } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Calendar, Clock, Search, Filter, X } from 'lucide-react'
 import { BlogPost, SearchFilters } from '@/types/blog'
 import { motion } from 'framer-motion'
 import { formatDate } from '@/lib/client-utils'
@@ -21,7 +22,10 @@ const POSTS_PER_PAGE = 6
 export default function BlogList({ posts, initialFilters = {} }: BlogListProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState(initialFilters.query || '')
-  const [selectedTag, setSelectedTag] = useState('')
+  // Multi-tag selection state
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [filterMode, setFilterMode] = useState<'any' | 'all'>('any')
+  const [tagPicker, setTagPicker] = useState('')
   const [showOnlyFeatured, setShowOnlyFeatured] = useState(false)
 
   // Get all unique tags from posts
@@ -43,15 +47,19 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
         post.summary.toLowerCase().includes(searchInContent) ||
         post.tags.some(tag => tag.toLowerCase().includes(searchInContent))
 
-      // Filter by selected tag
-      const matchesTag = !selectedTag || post.tags.includes(selectedTag)
+      // Filter by selected tags (any/all)
+      const matchesTag = selectedTags.length === 0
+        ? true
+        : filterMode === 'all'
+          ? selectedTags.every(t => post.tags.includes(t))
+          : selectedTags.some(t => post.tags.includes(t))
 
       // Filter by featured status
       const matchesFeatured = !showOnlyFeatured || post.featured
 
       return matchesSearch && matchesTag && matchesFeatured
     })
-  }, [posts, searchQuery, selectedTag, showOnlyFeatured])
+  }, [posts, searchQuery, selectedTags, filterMode, showOnlyFeatured])
 
   // Paginate filtered posts
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
@@ -61,13 +69,24 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, selectedTag, showOnlyFeatured])
+  }, [searchQuery, selectedTags, filterMode, showOnlyFeatured])
 
   const clearFilters = () => {
     setSearchQuery('')
-    setSelectedTag('')
+    setSelectedTags([])
+    setFilterMode('any')
     setShowOnlyFeatured(false)
+    setTagPicker('')
     setCurrentPage(1)
+  }
+
+  // Helpers to manage selected tags
+  const addTag = (tag: string) => {
+    if (!tag) return
+    setSelectedTags(prev => (prev.includes(tag) ? prev : [...prev, tag]))
+  }
+  const removeTag = (tag: string) => {
+    setSelectedTags(prev => prev.filter(t => t !== tag))
   }
 
   return (
@@ -112,21 +131,45 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
             />
           </div>
 
-          {/* Tag Filter */}
+          {/* Tag Filter (adds a tag to selection) */}
           <select
-            value={selectedTag}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedTag(e.target.value)}
+            value={tagPicker}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              addTag(e.target.value)
+              setTagPicker('')
+            }}
             className="px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-            aria-label="Filter by tag"
-            title="Filter posts by tag"
+            aria-label="Add tag to filter"
+            title="Add a tag to filter"
           >
-            <option value="">All Tags</option>
+            <option value="">Add tag…</option>
             {allTags.map(tag => (
-              <option key={tag} value={tag}>
+              <option key={tag} value={tag} disabled={selectedTags.includes(tag)}>
                 {tag}
               </option>
             ))}
           </select>
+
+          {/* Match mode toggle */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Match</span>
+            <Button
+              size="sm"
+              variant={filterMode === 'all' ? 'default' : 'outline'}
+              onClick={() => setFilterMode('all')}
+              aria-pressed={filterMode === 'all'}
+            >
+              All
+            </Button>
+            <Button
+              size="sm"
+              variant={filterMode === 'any' ? 'default' : 'outline'}
+              onClick={() => setFilterMode('any')}
+              aria-pressed={filterMode === 'any'}
+            >
+              Any
+            </Button>
+          </div>
 
           {/* Featured Filter */}
           <label className="flex items-center space-x-2 cursor-pointer">
@@ -140,13 +183,32 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
           </label>
 
           {/* Clear Filters */}
-          {(searchQuery || selectedTag || showOnlyFeatured) && (
+          {(searchQuery || selectedTags.length > 0 || showOnlyFeatured) && (
             <Button variant="outline" onClick={clearFilters} size="sm">
               <Filter className="h-4 w-4 mr-2" />
               Clear
             </Button>
           )}
         </div>
+
+        {/* Selected tags list */}
+        {selectedTags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {selectedTags.map(tag => (
+              <Badge
+                key={tag}
+                variant="secondary"
+                className="cursor-pointer group"
+                onClick={() => removeTag(tag)}
+                aria-label={`Remove tag ${tag}`}
+                title="Click to remove"
+              >
+                <span className="mr-1">{tag}</span>
+                <X className="inline-block h-3 w-3 opacity-70 group-hover:opacity-100" />
+              </Badge>
+            ))}
+          </div>
+        )}
 
         {/* Results Count */}
         <p className="text-sm text-muted-foreground">
@@ -197,15 +259,32 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
                         key={tag} 
                         variant="outline" 
                         className="text-xs cursor-pointer hover:bg-muted"
-                        onClick={() => setSelectedTag(tag)}
+                        onClick={() => addTag(tag)}
+                        title="Click to add to filters"
                       >
                         {tag}
                       </Badge>
                     ))}
                     {post.tags.length > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{post.tags.length - 3}
-                      </Badge>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Badge 
+                            variant="outline" 
+                            className="text-xs cursor-pointer"
+                            aria-label={`Show ${post.tags.length - 3} more tags`}
+                            title="Show more tags"
+                          >
+                            +{post.tags.length - 3}
+                          </Badge>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          {post.tags.slice(3).map(tag => (
+                            <DropdownMenuItem key={tag} onSelect={() => addTag(tag)}>
+                              {tag}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     )}
                   </div>
 
