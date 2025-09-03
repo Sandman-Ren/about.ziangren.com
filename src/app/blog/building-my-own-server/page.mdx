@@ -1,0 +1,30 @@
+import BlogLayout from '@/components/blog/blog-layout'
+
+<BlogLayout slug="building-my-own-server">
+
+# Building My Own Server
+
+This is a series where I share how I set up my own server from scratch using a couple of Windows, MacOS and Raspberry Pi devices that happen to lie around in my room. The goal is to document what I've done and some design decisions I made along the way.
+
+The goal of this journey is to have a single node, self-hosted server that can run public facing applications and secured with HTTPS, authentication and authorization via an Identity Provider (IdP). Hopefully I'll get the chance to deploy Kubernetes (or a light-weight K3S instance on my 4 devices).
+
+## Network Setup
+
+Gateway: 1 2.5Gbps Ethernet Router (1 2.5Gbps WAN, 3 1Gbps LAN)
+Switches: 1 8-Port 1Gbps Switch, 1 5-Port 1Gbps Switch
+
+## Server Setup
+
+## Services
+
+This section covers the list of services that I deployed on my server.
+
+### Secret Management via HashiCorp Vault
+
+This sections covers how I set up HashiCorp Vault to manage secrets.
+
+### Identity Provider via Keycloak
+
+This sections covers how I set up Keycloak as my Identity Provider (IdP) for managing user authentication and authorization.
+
+</BlogLayout>
