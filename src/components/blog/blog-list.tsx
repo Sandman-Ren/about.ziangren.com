@@ -238,7 +238,7 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
               transition={{ duration: 0.5, delay: 0.1 * index }}
             >
               <Link href={`/blog/${post.slug}`} className="block h-full">
-                <Card className="h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer">
+                <Card className="h-full card-hover-shadow cursor-pointer">
                   <CardHeader>
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle className="text-lg leading-tight group-hover:underline">

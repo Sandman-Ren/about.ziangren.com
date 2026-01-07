@@ -48,7 +48,7 @@ export default function NotFound() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="grid gap-4 md:grid-cols-3"
         >
-          <Card className="group hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <Card className="group card-hover-shadow cursor-pointer">
             <CardHeader className="text-center">
               <Home className="h-8 w-8 mx-auto mb-2 text-primary group-hover:scale-110 transition-transform" />
               <CardTitle className="text-lg">Go Home</CardTitle>
@@ -65,7 +65,7 @@ export default function NotFound() {
             </CardContent>
           </Card>
 
-          <Card className="group hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <Card className="group card-hover-shadow cursor-pointer">
             <CardHeader className="text-center">
               <BookOpen className="h-8 w-8 mx-auto mb-2 text-primary group-hover:scale-110 transition-transform" />
               <CardTitle className="text-lg">Read Blog</CardTitle>
@@ -82,7 +82,7 @@ export default function NotFound() {
             </CardContent>
           </Card>
 
-          <Card className="group hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <Card className="group card-hover-shadow cursor-pointer">
             <CardHeader className="text-center">
               <Gamepad2 className="h-8 w-8 mx-auto mb-2 text-primary group-hover:scale-110 transition-transform" />
               <CardTitle className="text-lg">Fun Stuff</CardTitle>

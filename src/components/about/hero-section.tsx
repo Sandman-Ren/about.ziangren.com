@@ -57,7 +57,7 @@ function SvgBubble({ children }: { children: React.ReactNode }) {
   <div className="relative inline-block overflow-visible">
       {/* Background shape with notch. Scales to content via viewBox. */}
       <svg
-    className="absolute inset-0 -z-10 w-full h-full overflow-visible filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
+    className="absolute inset-0 -z-10 w-full h-full overflow-visible filter drop-shadow-bubble"
         viewBox="0 0 100 44"
         preserveAspectRatio="none"
         aria-hidden
