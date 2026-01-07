@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Calendar, Clock, Search, Filter, X } from 'lucide-react'
+import { Calendar, Clock, Search, X } from 'lucide-react'
 import { BlogPost, SearchFilters } from '@/types/blog'
 import { motion } from 'framer-motion'
 import { formatDate } from '@/lib/client-utils'
@@ -119,16 +119,31 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <div className="flex flex-col sm:flex-row gap-4">
-          {/* Search Input */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Search posts, tags, or content..."
-              value={searchQuery}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-              className="pl-10"
-              aria-label="Search blog posts"
-            />
+          {/* Search Input with Clear Button */}
+          <div className="flex flex-1 gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder="Search posts, tags, or content..."
+                value={searchQuery}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                className="pl-10"
+                aria-label="Search blog posts"
+              />
+            </div>
+            {/* Clear Filters - separate from search bar but shrinks it */}
+            {(searchQuery || selectedTags.length > 0 || showOnlyFeatured) && (
+              <Button 
+                variant="outline" 
+                onClick={clearFilters} 
+                size="sm"
+                className="shrink-0 h-10"
+                aria-label="Clear all filters"
+              >
+                <X className="h-4 w-4 mr-1" />
+                Clear
+              </Button>
+            )}
           </div>
 
           {/* Tag Filter (adds a tag to selection) */}
@@ -182,13 +197,6 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
             <span className="text-sm">Featured only</span>
           </label>
 
-          {/* Clear Filters */}
-          {(searchQuery || selectedTags.length > 0 || showOnlyFeatured) && (
-            <Button variant="outline" onClick={clearFilters} size="sm">
-              <Filter className="h-4 w-4 mr-2" />
-              Clear
-            </Button>
-          )}
         </div>
 
         {/* Selected tags list */}
@@ -229,96 +237,95 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 * index }}
             >
-              <Card className="h-full hover:shadow-lg transition-shadow duration-200">
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-lg leading-tight">
-                      <Link 
-                        href={`/blog/${post.slug}`}
-                        className="hover:underline"
-                      >
+              <Link href={`/blog/${post.slug}`} className="block h-full">
+                <Card className="h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer">
+                  <CardHeader>
+                    <div className="flex items-start justify-between gap-2">
+                      <CardTitle className="text-lg leading-tight group-hover:underline">
                         {post.title}
-                      </Link>
-                    </CardTitle>
-                    {post.featured && (
-                      <Badge variant="secondary" className="shrink-0">
-                        Featured
-                      </Badge>
+                      </CardTitle>
+                      {post.featured && (
+                        <Badge variant="secondary" className="shrink-0">
+                          Featured
+                        </Badge>
+                      )}
+                    </div>
+                    <CardDescription className="line-clamp-2">
+                      {post.summary}
+                    </CardDescription>
+                  </CardHeader>
+
+                  <CardContent className="pt-0">
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {post.tags.slice(0, 3).map(tag => (
+                        <Badge 
+                          key={tag} 
+                          variant="outline" 
+                          className="text-xs cursor-pointer hover:bg-muted"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            addTag(tag)
+                          }}
+                          title="Click to add to filters"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                      {post.tags.length > 3 && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
+                            <Badge 
+                              variant="outline" 
+                              className="text-xs cursor-pointer"
+                              aria-label={`Show ${post.tags.length - 3} more tags`}
+                              title="Show more tags"
+                            >
+                              +{post.tags.length - 3}
+                            </Badge>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start">
+                            {post.tags.slice(3).map(tag => (
+                              <DropdownMenuItem key={tag} onSelect={() => addTag(tag)}>
+                                {tag}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
+
+                    {/* Meta Information */}
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>{formatDate(post.date)}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        <span>{post.readingTime}</span>
+                      </div>
+                    </div>
+
+                    {/* AI Assisted Badge */}
+                    {post.aiAssisted && (
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Badge variant="outline" className="text-xs">
+                          🤖 AI Assisted
+                        </Badge>
+                      </div>
                     )}
-                  </div>
-                  <CardDescription className="line-clamp-2">
-                    {post.summary}
-                  </CardDescription>
-                </CardHeader>
 
-                <CardContent className="pt-0">
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {post.tags.slice(0, 3).map(tag => (
-                      <Badge 
-                        key={tag} 
-                        variant="outline" 
-                        className="text-xs cursor-pointer hover:bg-muted"
-                        onClick={() => addTag(tag)}
-                        title="Click to add to filters"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                    {post.tags.length > 3 && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Badge 
-                            variant="outline" 
-                            className="text-xs cursor-pointer"
-                            aria-label={`Show ${post.tags.length - 3} more tags`}
-                            title="Show more tags"
-                          >
-                            +{post.tags.length - 3}
-                          </Badge>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start">
-                          {post.tags.slice(3).map(tag => (
-                            <DropdownMenuItem key={tag} onSelect={() => addTag(tag)}>
-                              {tag}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </div>
-
-                  {/* Meta Information */}
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>{formatDate(post.date)}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{post.readingTime}</span>
-                    </div>
-                  </div>
-
-                  {/* AI Assisted Badge */}
-                  {post.aiAssisted && (
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Badge variant="outline" className="text-xs">
-                        🤖 AI Assisted
-                      </Badge>
-                    </div>
-                  )}
-
-                  {/* Read More Link */}
-                  <div className="mt-4">
-                    <Link href={`/blog/${post.slug}`}>
-                      <Button variant="ghost" size="sm" className="p-0 h-auto">
+                    {/* Read More Link */}
+                    <div className="mt-4">
+                      <span className="text-sm font-medium text-primary hover:underline">
                         Read more →
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             </motion.div>
           ))}
         </div>
