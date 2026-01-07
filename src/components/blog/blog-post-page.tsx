@@ -4,10 +4,11 @@ import { BlogPost } from '@/types/blog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Calendar, Clock, ArrowLeft, ExternalLink, MessageCircle } from 'lucide-react'
+import { Calendar, Clock, ArrowLeft, ExternalLink, MessageCircle, User } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { generateGitHubIssueUrl, formatDate } from '@/lib/client-utils'
+import Image from 'next/image'
 
 interface BlogPostPageProps {
   post: BlogPost
@@ -19,7 +20,26 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
 
   return (
     <article className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Cover Image - Full width hero */}
+      {post.coverImage && (
+        <motion.div
+          className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Image
+            src={post.coverImage}
+            alt={post.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+        </motion.div>
+      )}
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back to Blog Link */}
         <motion.div
           className="mb-8"
@@ -37,7 +57,7 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
 
         {/* Article Header */}
         <motion.header
-          className="mb-12"
+          className="mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -50,34 +70,40 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
           )}
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-5 leading-tight">
             {post.title}
           </h1>
 
           {/* Summary */}
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+          <p className="text-lg sm:text-xl text-muted-foreground mb-6 leading-relaxed">
             {post.summary}
           </p>
 
-          {/* Meta Information */}
-          <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-6">
-            <div className="flex items-center gap-2">
+          {/* Meta Information - Redesigned */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground mb-6">
+            {post.author && (
+              <div className="flex items-center gap-1.5">
+                <User className="h-4 w-4" />
+                <span className="font-medium">{post.author}</span>
+              </div>
+            )}
+            <span className="text-border">•</span>
+            <div className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              <span>{formatDate(post.date)}</span>
+              <time dateTime={post.date}>{formatDate(post.date)}</time>
             </div>
-            <div className="flex items-center gap-2">
+            <span className="text-border">•</span>
+            <div className="flex items-center gap-1.5">
               <Clock className="h-4 w-4" />
               <span>{post.readingTime} min read</span>
             </div>
-            {post.author && (
-              <div className="flex items-center gap-2">
-                <span>By {post.author}</span>
-              </div>
-            )}
             {post.lastModified && post.lastModified !== post.date && (
-              <div className="flex items-center gap-2">
-                <span>Updated {formatDate(post.lastModified)}</span>
-              </div>
+              <>
+                <span className="text-border">•</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="italic">Updated {formatDate(post.lastModified)}</span>
+                </div>
+              </>
             )}
           </div>
 
@@ -85,7 +111,7 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
           <div className="flex flex-wrap gap-2 mb-6">
             {post.tags.map(tag => (
               <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>
-                <Badge variant="outline" className="hover:bg-muted cursor-pointer">
+                <Badge variant="outline" className="hover:bg-muted cursor-pointer transition-colors">
                   {tag}
                 </Badge>
               </Link>
@@ -94,7 +120,7 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
 
           {/* AI Assisted Notice */}
           {post.aiAssisted && (
-            <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg text-sm text-muted-foreground">
+            <div className="flex items-center gap-2.5 p-3 bg-muted/40 border border-border/50 rounded-lg text-sm text-muted-foreground">
               <span className="text-lg">🤖</span>
               <span>
                 This post was written with AI assistance to help structure content and improve clarity.
@@ -105,9 +131,19 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
           <Separator className="mt-8" />
         </motion.header>
 
-        {/* Article Content */}
+        {/* Article Content - Optimized prose container */}
         <motion.div
-          className="prose prose-lg max-w-none dark:prose-invert prose-headings:tracking-tight prose-a:text-primary hover:prose-a:text-primary/80 prose-pre:bg-muted prose-pre:border prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none"
+          className="prose prose-lg max-w-none dark:prose-invert
+            prose-headings:font-semibold prose-headings:tracking-tight
+            prose-p:text-foreground/90 prose-p:leading-relaxed
+            prose-a:text-primary prose-a:decoration-primary/30 prose-a:underline-offset-4 hover:prose-a:decoration-primary
+            prose-strong:text-foreground prose-strong:font-semibold
+            prose-blockquote:border-primary/50 prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:not-italic
+            prose-pre:bg-muted/50 prose-pre:border prose-pre:border-border
+            prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:font-medium
+            prose-code:before:content-none prose-code:after:content-none
+            prose-img:rounded-lg prose-img:border prose-img:border-border
+            prose-hr:border-border"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}

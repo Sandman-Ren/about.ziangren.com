@@ -1,0 +1,261 @@
+import BlogLayout from '@/components/blog/blog-layout'
+
+<BlogLayout slug="typography-showcase">
+
+# The Art of Typography in Digital Design
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+## Headings Hierarchy
+
+### This is a Third-Level Heading
+
+Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Aenean lacinia bibendum nulla sed consectetur.
+
+#### Fourth-Level Heading for Subsections
+
+Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+
+## Text Formatting and Emphasis
+
+Regular paragraph text flows naturally with comfortable line height and spacing. **Bold text stands out for important information**, while *italic text adds emphasis or denotes titles*. You can also combine ***bold and italic*** for maximum emphasis.
+
+Here's some `inline code` that appears within a sentence. It's useful for mentioning function names like `useState()` or file paths like `src/components/Button.tsx`.
+
+Sometimes you need to ~~strike through text~~ to show corrections or deprecated information.
+
+## Links and Navigation
+
+We support both [internal links](/blog) to other pages on the site and [external links](https://github.com) that open in new tabs automatically.
+
+Here's a reference-style explanation: check out the [React documentation](https://react.dev) for component patterns, or visit the [Tailwind CSS](https://tailwindcss.com) site for utility class references.
+
+## Block Quotations
+
+> "Design is not just what it looks like and feels like. Design is how it works."
+> 
+> — Steve Jobs
+
+Blockquotes are perfect for highlighting important statements, testimonials, or excerpts from other sources:
+
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. This is a longer quote that spans multiple lines to demonstrate how the styling handles extended quotations gracefully.
+
+## Code Blocks
+
+### JavaScript Example
+
+```javascript
+// A simple React component with hooks
+import { useState, useEffect } from 'react';
+
+function Counter({ initialValue = 0 }) {
+  const [count, setCount] = useState(initialValue);
+  
+  useEffect(() => {
+    document.title = `Count: ${count}`;
+  }, [count]);
+
+  return (
+    <div className="counter">
+      <p>Current count: {count}</p>
+      <button onClick={() => setCount(c => c + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+}
+
+export default Counter;
+```
+
+### TypeScript with Interfaces
+
+```typescript
+interface BlogPost {
+  title: string;
+  slug: string;
+  date: string;
+  author?: string;
+  tags: string[];
+  content: string;
+  featured: boolean;
+}
+
+async function fetchPosts(): Promise<BlogPost[]> {
+  const response = await fetch('/api/posts');
+  if (!response.ok) {
+    throw new Error('Failed to fetch posts');
+  }
+  return response.json();
+}
+```
+
+### CSS Styling
+
+```css
+.prose {
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  max-width: 65ch;
+  line-height: 1.75;
+}
+
+.prose a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.2s ease;
+}
+
+.prose a:hover {
+  color: hsl(var(--primary) / 0.8));
+}
+```
+
+### Command Line
+
+```bash
+# Install dependencies
+npm install @tailwindcss/typography
+
+# Build the project
+npm run build
+
+# Start development server
+npm run dev
+```
+
+## Lists
+
+### Unordered Lists
+
+Here are the key principles of good typography:
+
+- **Readability**: Text should be easy to read with proper contrast and sizing
+- **Hierarchy**: Clear visual distinction between headings and body text
+- **Consistency**: Use the same styles throughout for similar elements
+- **White Space**: Adequate spacing improves comprehension
+  - Line height should be 1.5-1.8 for body text
+  - Margins between paragraphs aid scanning
+  - Indentation helps organize nested content
+- **Accessibility**: Consider users with visual impairments
+
+### Ordered Lists
+
+Steps to implement a design system:
+
+1. **Audit existing styles** - Document current typography and spacing
+2. **Define tokens** - Create variables for colors, fonts, and spacing
+3. **Build components** - Implement reusable UI components
+4. **Document patterns** - Write guidelines for usage
+5. **Iterate and refine** - Gather feedback and improve
+   1. Conduct user testing
+   2. Analyze usage patterns
+   3. Update documentation
+6. **Maintain consistency** - Regular reviews and updates
+
+### Mixed Content in Lists
+
+- This list item contains `inline code` within the text
+- Here's an item with a [link to somewhere](/blog)
+- **Bold items** draw attention to key points
+- Items can span multiple lines when the content requires more explanation. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## Tables
+
+### Comparison Table
+
+| Feature | Free Plan | Pro Plan | Enterprise |
+|---------|-----------|----------|------------|
+| Users | 1 | Up to 10 | Unlimited |
+| Storage | 5 GB | 100 GB | 1 TB |
+| Support | Community | Email | 24/7 Phone |
+| API Access | Limited | Full | Full + Priority |
+| Custom Domain | ❌ | ✅ | ✅ |
+| Analytics | Basic | Advanced | Advanced + Custom |
+
+### Technical Specifications
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `variant` | `string` | `"default"` | The visual style variant |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Size of the component |
+| `disabled` | `boolean` | `false` | Whether the component is disabled |
+| `onClick` | `function` | `undefined` | Click event handler |
+| `className` | `string` | `""` | Additional CSS classes |
+
+## Horizontal Rules
+
+Content above the horizontal rule.
+
+---
+
+Content below the horizontal rule. Use these sparingly to denote major section breaks.
+
+## Images and Media
+
+Images automatically get rounded corners and borders. When you provide alt text, it becomes a caption:
+
+![A beautiful sunset over the mountains with vibrant orange and purple hues](https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80)
+
+## Combining Elements
+
+### A Complex Section
+
+Here's how multiple elements work together in a real-world scenario:
+
+> **Pro Tip**: When building a design system, start with typography. It forms the foundation of your entire visual language.
+
+The implementation might look something like this:
+
+```typescript
+const typographyConfig = {
+  fontFamily: {
+    sans: ['Geist Sans', 'system-ui', 'sans-serif'],
+    mono: ['Geist Mono', 'monospace'],
+  },
+  fontSize: {
+    sm: ['0.875rem', { lineHeight: '1.25rem' }],
+    base: ['1rem', { lineHeight: '1.75rem' }],
+    lg: ['1.125rem', { lineHeight: '1.75rem' }],
+  },
+};
+```
+
+Key considerations:
+
+1. **Font loading** - Use `next/font` for optimal performance
+2. **Fallbacks** - Always include system font fallbacks
+3. **Variable fonts** - Reduce file size with variable font files
+
+For more information, check out the [Web Typography Guidelines](https://web.dev/learn/design/typography/) or read the classic book *"The Elements of Typographic Style"* by Robert Bringhurst.
+
+## Long-Form Content
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.
+
+Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu ullamcorper orci.
+
+Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor. Nulla facilisi. Duis aliquet egestas purus in blandit. Curabitur vulputate, ligula lacinia scelerisque tempor, lacus lacus ornare ante.
+
+### Paragraph Spacing
+
+Notice how paragraphs have comfortable spacing between them. This helps readers track their position and makes scanning easier.
+
+Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+
+Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+
+## Conclusion
+
+This showcase demonstrates the full range of typography and formatting options available. Use these elements thoughtfully to create content that is both visually appealing and easy to read.
+
+**Remember**: Good typography is invisible — readers should focus on your content, not your formatting.
+
+---
+
+*Thank you for reading this typography showcase. Feel free to reference this post when creating your own content.*
+
+</BlogLayout>
