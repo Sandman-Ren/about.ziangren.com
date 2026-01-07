@@ -3,10 +3,17 @@
 import * as React from "react"
 import { Moon, Sun, Monitor } from "lucide-react"
 import { useTheme } from "next-themes"
+import { AnimatePresence, motion } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 
 const themes = ["light", "dark", "system"] as const
+
+const iconVariants = {
+  initial: { x: 20, opacity: 0 },
+  animate: { x: 0, opacity: 1 },
+  exit: { x: -20, opacity: 0 },
+}
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
@@ -33,10 +40,48 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button variant="outline" size="icon" onClick={cycleTheme}>
-      {theme === "light" && <Sun className="h-[1.2rem] w-[1.2rem]" />}
-      {theme === "dark" && <Moon className="h-[1.2rem] w-[1.2rem]" />}
-      {theme === "system" && <Monitor className="h-[1.2rem] w-[1.2rem]" />}
+    <Button variant="outline" size="icon" onClick={cycleTheme} className="relative overflow-hidden">
+      <AnimatePresence mode="wait" initial={false}>
+        {theme === "light" && (
+          <motion.div
+            key="light"
+            variants={iconVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <Sun className="h-[1.2rem] w-[1.2rem]" />
+          </motion.div>
+        )}
+        {theme === "dark" && (
+          <motion.div
+            key="dark"
+            variants={iconVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <Moon className="h-[1.2rem] w-[1.2rem]" />
+          </motion.div>
+        )}
+        {theme === "system" && (
+          <motion.div
+            key="system"
+            variants={iconVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <Monitor className="h-[1.2rem] w-[1.2rem]" />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <span className="sr-only">Toggle theme (current: {theme})</span>
     </Button>
   )
