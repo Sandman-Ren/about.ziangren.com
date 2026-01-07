@@ -63,7 +63,6 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
         >
           <MainLayout>{children}</MainLayout>
         </ThemeProvider>
