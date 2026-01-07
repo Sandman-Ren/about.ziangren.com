@@ -90,26 +90,29 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <motion.h1 
-          className="text-4xl font-bold tracking-tight mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Blog Posts
-        </motion.h1>
-        <motion.p 
-          className="text-xl text-muted-foreground max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          Thoughts on technology, development, and the intersection of code and creativity.
-        </motion.p>
-      </div>
+    <div className="h-full flex flex-col">
+      {/* Fixed Header Section */}
+      <div className="flex-shrink-0 px-4 sm:px-6 lg:px-8 pt-8 pb-4 bg-background">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <motion.h1 
+              className="text-4xl font-bold tracking-tight mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              Blog Posts
+            </motion.h1>
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              Thoughts on technology, development, and the intersection of code and creativity.
+            </motion.p>
+          </div>
 
       {/* Search and Filters */}
       <motion.div 
@@ -226,6 +229,12 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
           }
         </p>
       </motion.div>
+        </div>
+      </div>
+
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="max-w-7xl mx-auto">
 
       {/* Blog Posts Grid */}
       {paginatedPosts.length > 0 ? (
@@ -397,6 +406,8 @@ export default function BlogList({ posts, initialFilters = {} }: BlogListProps) 
           </Button>
         </motion.div>
       )}
+        </div>
+      </div>
     </div>
   )
 }

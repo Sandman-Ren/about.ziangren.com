@@ -7,12 +7,11 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
+    <div className="relative flex h-full flex-col bg-background overflow-hidden">
       <Navigation />
-      <main className="flex-1">
+      <main className="flex-1 overflow-hidden">
         {children}
       </main>
-      <Footer />
     </div>
   )
 }
