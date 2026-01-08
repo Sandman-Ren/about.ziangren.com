@@ -19,11 +19,11 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
   const issueUrl = generateGitHubIssueUrl(post)
 
   return (
-    <article className="min-h-screen bg-background">
-      {/* Cover Image - Full width hero */}
+    <article className="h-full flex flex-col bg-background">
+      {/* Cover Image - Full width hero (fixed at top) */}
       {post.coverImage && (
         <motion.div
-          className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden"
+          className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden flex-shrink-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
@@ -39,7 +39,9 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
         </motion.div>
       )}
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back to Blog Link */}
         <motion.div
           className="mb-8"
@@ -189,6 +191,7 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
             Keywords: {post.keywords.join(', ')}
           </div>
         </motion.footer>
+        </div>
       </div>
     </article>
   )

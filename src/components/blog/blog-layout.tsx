@@ -35,7 +35,7 @@ export default function BlogLayout({ slug, children }: BlogLayoutProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="h-full bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading post...</p>
@@ -46,7 +46,7 @@ export default function BlogLayout({ slug, children }: BlogLayoutProps) {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="h-full bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-2">Post Not Found</h1>
           <p className="text-muted-foreground mb-4">The blog post you&apos;re looking for doesn&apos;t exist.</p>
@@ -61,25 +61,27 @@ export default function BlogLayout({ slug, children }: BlogLayoutProps) {
   const issueUrl = generateGitHubIssueUrl(post)
 
   return (
-    <article className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Back to Blog Link */}
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Link href="/blog">
-            <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Blog
-            </Button>
-          </Link>
-        </motion.div>
+    <article className="h-full flex flex-col bg-background">
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Back to Blog Link */}
+          <motion.div
+            className="mb-8"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link href="/blog">
+              <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Blog
+              </Button>
+            </Link>
+          </motion.div>
 
-        {/* Article Header */}
-        <motion.header
+          {/* Article Header */}
+          <motion.header
           className="mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -196,6 +198,7 @@ export default function BlogLayout({ slug, children }: BlogLayoutProps) {
             Keywords: {post.keywords.join(', ')}
           </div>
         </motion.footer>
+        </div>
       </div>
     </article>
   )
