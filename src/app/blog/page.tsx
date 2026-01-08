@@ -25,7 +25,7 @@ export default function BlogPage() {
 
   if (loading) {
     return (
-      <div className="h-full bg-background flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading blog posts...</p>
@@ -34,9 +34,5 @@ export default function BlogPage() {
     )
   }
 
-  return (
-    <div className="h-full bg-background">
-      <BlogList posts={posts} />
-    </div>
-  )
+  return <BlogList posts={posts} />
 }

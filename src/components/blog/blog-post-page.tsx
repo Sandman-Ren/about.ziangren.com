@@ -19,7 +19,7 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
   const issueUrl = generateGitHubIssueUrl(post)
 
   return (
-    <article className="h-full flex flex-col bg-background">
+    <article className="flex-1 flex flex-col overflow-hidden">
       {/* Cover Image - Full width hero (fixed at top) */}
       {post.coverImage && (
         <motion.div
