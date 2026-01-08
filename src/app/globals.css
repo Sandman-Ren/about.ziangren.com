@@ -174,11 +174,13 @@
   
   /* Theme-aware card hover shadow - provides visible shadows in both light and dark modes */
   .card-hover-shadow {
-    transition: box-shadow 0.2s ease-in-out;
+    transition: box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    border-color: transparent;
   }
   
   .card-hover-shadow:hover {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    border-color: hsl(var(--border));
   }
   
   .dark .card-hover-shadow:hover {
@@ -188,5 +190,6 @@
       0 0 0 1px rgba(255, 255, 255, 0.15),
       0 0 30px -5px rgba(255, 255, 255, 0.12),
       0 0 15px -3px rgba(255, 255, 255, 0.08);
+    border-color: hsl(var(--border));
   }
 }
