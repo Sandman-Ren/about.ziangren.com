@@ -230,9 +230,9 @@ export function HeroSection() {
                 onMouseLeave={handleMouseLeave}
               >
                 <AvatarImage 
-                  src="/profile.svg" 
+                  src="/profile.jpg" 
                   alt="Ziang Ren"
-                  className="object-cover"
+                  className="object-cover object-top"
                 />
                 <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
                   ZR
