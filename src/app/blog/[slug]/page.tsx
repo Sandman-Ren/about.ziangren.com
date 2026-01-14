@@ -1,8 +1,8 @@
-import { getBlogPost, getAllBlogPosts } from '@/lib/blog/registry'
+import { getBlogPost } from '@/lib/blog/registry'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import BlogPostPage from '@/components/blog/blog-post-page'
-import { getBlogContent } from '@/content/blog'
+import { slugs } from '@/content/blog/slugs'
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -10,13 +10,13 @@ interface BlogPostPageProps {
   }>
 }
 
-export async function generateStaticParams() {
-  const posts = await getAllBlogPosts()
-
-  return posts.map((post) => ({
-    slug: post.slug,
-  }))
+// Generate static params from the auto-generated slugs list
+export function generateStaticParams() {
+  return slugs.map((slug) => ({ slug }))
 }
+
+// Return 404 for unknown slugs
+export const dynamicParams = false
 
 export async function generateMetadata({
   params
@@ -61,13 +61,8 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
     notFound()
   }
 
-  // Get the MDX content component for this post
-  const Content = getBlogContent(slug)
-
-  if (!Content) {
-    // Post exists in registry but no content file - show metadata only
-    return <BlogPostPage post={post} />
-  }
+  // Dynamic import - MDX file exists after import-notes runs
+  const { default: Content } = await import(`@/content/blog/${slug}.mdx`)
 
   return (
     <BlogPostPage post={post}>

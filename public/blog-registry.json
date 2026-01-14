@@ -1,69 +1,130 @@
 {
   "posts": [
     {
-      "slug": "welcome-to-my-new-blog",
-      "title": "Welcome to My New Blog",
-      "summary": "Introducing my new blog built with Next.js, MDX, and modern web technologies. Learn about the features, technologies used, and what you can expect from future posts.",
-      "date": "2025-08-12",
-      "tags": ["welcome", "nextjs", "mdx", "web-development"],
-      "keywords": ["blog", "Next.js", "MDX", "React", "TypeScript", "web development"],
-      "published": true,
-      "featured": true,
-      "aiAssisted": true,
-      "author": "Ziang Ren",
-      "readingTime": 8
-    },
-    {
-      "slug": "building-modern-react-typescript",
-      "title": "Building Modern React Applications with TypeScript",
-      "summary": "A comprehensive guide to building scalable React applications using TypeScript, covering best practices, patterns, and advanced techniques.",
-      "date": "2025-08-10",
-      "tags": ["react", "typescript", "frontend", "best-practices"],
-      "keywords": ["React", "TypeScript", "components", "hooks", "patterns", "scalability"],
+      "slug": "typography-showcase",
+      "title": "Typography Showcase",
+      "summary": "A comprehensive demonstration of all typography styles, components, and formatting options available in our blog posts. This post serves as both a style guide and visual test.",
+      "date": "2026-01-07",
+      "tags": [
+        "Design",
+        "Typography",
+        "Showcase"
+      ],
+      "keywords": [
+        "typography",
+        "design system",
+        "mdx",
+        "components",
+        "styling"
+      ],
       "published": true,
       "featured": false,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 12
-    },
-    {
-      "slug": "my-cs-journey",
-      "title": "My Journey in Computer Science: From Curiosity to Career",
-      "summary": "Reflecting on my path through computer science education, internships, and building a career in tech, sharing lessons learned and advice for aspiring developers.",
-      "date": "2025-06-15",
-      "tags": ["personal", "career", "computer-science", "education"],
-      "keywords": ["computer science", "career journey", "education", "internships", "tech career", "personal growth"],
-      "published": true,
-      "featured": true,
-      "aiAssisted": true,
-      "author": "Ziang Ren",
-      "readingTime": 15
+      "readingTime": 7
     },
     {
       "slug": "building-my-own-server",
       "title": "Building My Own Server",
       "summary": "Documenting the process of setting up a single-node self-hosted server with secrets management, identity provider, deploying public-facing applications and monitor using Grafana Alloy and Dashboard",
       "date": "2025-09-02",
-      "tags": ["server", "self-hosting", "Docker", "grafana"],
-      "keywords": ["self-hosted", "server", "Docker", "Grafana", "monitoring", "secrets", "network", "security", "identity"],
+      "tags": [
+        "server",
+        "self-hosting",
+        "Docker",
+        "grafana"
+      ],
+      "keywords": [
+        "self-hosted",
+        "server",
+        "Docker",
+        "Grafana",
+        "monitoring",
+        "secrets",
+        "network",
+        "security",
+        "identity"
+      ],
       "published": true,
       "featured": true,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 20
+      "readingTime": 1
     },
     {
-      "slug": "typography-showcase",
-      "title": "Typography Showcase",
-      "summary": "A comprehensive demonstration of all typography styles, components, and formatting options available in our blog posts. This post serves as both a style guide and visual test.",
-      "date": "2026-01-07",
-      "tags": ["Design", "Typography", "Showcase"],
-      "keywords": ["typography", "design system", "mdx", "components", "styling"],
+      "slug": "welcome-to-my-new-blog",
+      "title": "Welcome to My New Blog",
+      "summary": "Introducing my new blog built with Next.js, MDX, and modern web technologies. Learn about the features, technologies used, and what you can expect from future posts.",
+      "date": "2025-08-12",
+      "tags": [
+        "welcome",
+        "nextjs",
+        "mdx",
+        "web-development"
+      ],
+      "keywords": [
+        "blog",
+        "Next.js",
+        "MDX",
+        "React",
+        "TypeScript",
+        "web development"
+      ],
+      "published": true,
+      "featured": true,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 2
+    },
+    {
+      "slug": "building-modern-react-typescript",
+      "title": "Building Modern React Applications with TypeScript",
+      "summary": "A comprehensive guide to building scalable React applications using TypeScript, covering best practices, patterns, and advanced techniques.",
+      "date": "2025-08-10",
+      "tags": [
+        "react",
+        "typescript",
+        "frontend",
+        "best-practices"
+      ],
+      "keywords": [
+        "React",
+        "TypeScript",
+        "components",
+        "hooks",
+        "patterns",
+        "scalability"
+      ],
       "published": true,
       "featured": false,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 12
+      "readingTime": 2
+    },
+    {
+      "slug": "my-cs-journey",
+      "title": "My Journey in Computer Science: From Curiosity to Career",
+      "summary": "Reflecting on my path through computer science education, internships, and building a career in tech, sharing lessons learned and advice for aspiring developers.",
+      "date": "2025-06-15",
+      "tags": [
+        "personal",
+        "career",
+        "computer-science",
+        "education"
+      ],
+      "keywords": [
+        "computer science",
+        "career journey",
+        "education",
+        "internships",
+        "tech career",
+        "personal growth"
+      ],
+      "published": true,
+      "featured": true,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 3
     }
   ]
 }

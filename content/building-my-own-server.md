@@ -1,3 +1,28 @@
+---
+title: Building My Own Server
+summary: Documenting the process of setting up a single-node self-hosted server with secrets management, identity provider, deploying public-facing applications and monitor using Grafana Alloy and Dashboard
+date: 2025-09-02
+tags:
+  - server
+  - self-hosting
+  - Docker
+  - grafana
+keywords:
+  - self-hosted
+  - server
+  - Docker
+  - Grafana
+  - monitoring
+  - secrets
+  - network
+  - security
+  - identity
+published: true
+featured: true
+aiAssisted: true
+author: Ziang Ren
+---
+
 # Building My Own Server
 
 This is a series where I share how I set up my own server from scratch using a couple of Windows, MacOS and Raspberry Pi devices that happen to lie around in my room. The goal is to document what I've done and some design decisions I made along the way.

@@ -1,3 +1,25 @@
+---
+title: "My Journey in Computer Science: From Curiosity to Career"
+summary: Reflecting on my path through computer science education, internships, and building a career in tech, sharing lessons learned and advice for aspiring developers.
+date: 2025-06-15
+tags:
+  - personal
+  - career
+  - computer-science
+  - education
+keywords:
+  - computer science
+  - career journey
+  - education
+  - internships
+  - tech career
+  - personal growth
+published: true
+featured: true
+aiAssisted: true
+author: Ziang Ren
+---
+
 # My Journey in Computer Science: From Curiosity to Career
 
 Reflecting on my path through computer science education, internships, and building a career in tech, sharing lessons learned and advice for aspiring developers.

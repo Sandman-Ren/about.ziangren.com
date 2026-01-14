@@ -1,3 +1,25 @@
+---
+title: Welcome to My New Blog
+summary: Introducing my new blog built with Next.js, MDX, and modern web technologies. Learn about the features, technologies used, and what you can expect from future posts.
+date: 2025-08-12
+tags:
+  - welcome
+  - nextjs
+  - mdx
+  - web-development
+keywords:
+  - blog
+  - Next.js
+  - MDX
+  - React
+  - TypeScript
+  - web development
+published: true
+featured: true
+aiAssisted: true
+author: Ziang Ren
+---
+
 # Welcome to My New Blog
 
 After months of planning and development, I'm excited to finally launch my new blog! This represents a significant milestone in my journey as a developer and content creator.

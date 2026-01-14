@@ -1,3 +1,25 @@
+---
+title: Building Modern React Applications with TypeScript
+summary: A comprehensive guide to building scalable React applications using TypeScript, covering best practices, patterns, and advanced techniques.
+date: 2025-08-10
+tags:
+  - react
+  - typescript
+  - frontend
+  - best-practices
+keywords:
+  - React
+  - TypeScript
+  - components
+  - hooks
+  - patterns
+  - scalability
+published: true
+featured: false
+aiAssisted: true
+author: Ziang Ren
+---
+
 # Building Modern React Applications with TypeScript
 
 A comprehensive guide to building scalable React applications using TypeScript, covering best practices, patterns, and advanced techniques.

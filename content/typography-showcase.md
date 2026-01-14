@@ -1,3 +1,23 @@
+---
+title: Typography Showcase
+summary: A comprehensive demonstration of all typography styles, components, and formatting options available in our blog posts. This post serves as both a style guide and visual test.
+date: 2026-01-07
+tags:
+  - Design
+  - Typography
+  - Showcase
+keywords:
+  - typography
+  - design system
+  - mdx
+  - components
+  - styling
+published: true
+featured: false
+aiAssisted: true
+author: Ziang Ren
+---
+
 # The Art of Typography in Digital Design
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
