@@ -23,7 +23,7 @@ test.describe('Home Page', () => {
   })
 
   test('should have working navigation links', async ({ page }) => {
-    // Check GitHub link (use .first() since footer also has one)
+    // Check GitHub link in hero section
     const githubLink = page.getByRole('main').getByRole('link', { name: /GitHub/i })
     await expect(githubLink).toBeVisible()
     await expect(githubLink).toHaveAttribute('href', /github\.com/)

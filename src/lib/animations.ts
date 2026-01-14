@@ -113,6 +113,16 @@ export const slideInRight: Variants = {
   exit: { opacity: 0, x: 20 },
 }
 
+/**
+ * Slide in from bottom - for reveal effects
+ * Used for: Footer reveal, bottom sheets, snackbars
+ */
+export const slideInFromBottom: Variants = {
+  initial: { opacity: 0, y: '100%' },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: '100%' },
+}
+
 // ============================================================================
 // Tap/Press Animations
 // ============================================================================
