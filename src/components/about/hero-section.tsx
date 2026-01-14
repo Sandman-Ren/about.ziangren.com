@@ -214,8 +214,7 @@ export function HeroSection() {
           <div className="relative inline-block">
             <motion.div
               whileTap={{ 
-                scale: 0.85,
-                rotateZ: Math.random() > 0.5 ? 5 : -5
+                scale: 0.85
               }}
               transition={{ 
                 type: "spring",
