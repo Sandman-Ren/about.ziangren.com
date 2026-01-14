@@ -1,38 +1,16 @@
-'use client'
+/**
+ * Blog List Page
+ *
+ * Server component that statically generates the blog list page.
+ * The blog registry is imported synchronously, so no async/await needed.
+ */
 
-import { useEffect, useState } from 'react'
-import { getAllBlogPosts } from '@/lib/client-utils'
+import { getAllBlogPosts } from '@/lib/blog/registry'
 import BlogList from '@/components/blog/blog-list'
-import { BlogPost } from '@/types/blog'
 
 export default function BlogPage() {
-  const [posts, setPosts] = useState<BlogPost[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadPosts() {
-      try {
-        const blogPosts = await getAllBlogPosts()
-        setPosts(blogPosts)
-      } catch (error) {
-        console.error('Failed to load blog posts:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadPosts()
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading blog posts...</p>
-        </div>
-      </div>
-    )
-  }
+  // Get all published posts, sorted by date
+  const posts = getAllBlogPosts()
 
   return <BlogList posts={posts} />
 }

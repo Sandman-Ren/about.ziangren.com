@@ -1,4 +1,4 @@
-import { getBlogPost, getAllBlogPosts } from '@/lib/client-utils'
+import { getBlogPost, getAllBlogPosts } from '@/lib/blog/registry'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import BlogPostPage from '@/components/blog/blog-post-page'

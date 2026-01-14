@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   Card,
@@ -21,91 +21,47 @@ import {
 import { Calendar, Clock, Search, X } from "lucide-react";
 import { BlogPost, SearchFilters } from "@/types/blog";
 import { motion } from "framer-motion";
-import { formatDate } from "@/lib/client-utils";
+import { formatDate } from "@/lib/formatting";
+import { useBlogFilters } from "@/hooks/useBlogFilters";
+import { UI } from "@/lib/constants";
 
 interface BlogListProps {
   posts: BlogPost[];
   initialFilters?: Partial<SearchFilters>;
 }
 
-const POSTS_PER_PAGE = 6;
-
 export default function BlogList({
   posts,
   initialFilters = {},
 }: BlogListProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState(initialFilters.query || "");
-  // Multi-tag selection state
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [filterMode, setFilterMode] = useState<"any" | "all">("any");
+  // Tag picker state (local UI state, not part of the filter hook)
   const [tagPicker, setTagPicker] = useState("");
-  const [showOnlyFeatured, setShowOnlyFeatured] = useState(false);
 
-  // Get all unique tags from posts
-  const allTags = useMemo(() => {
-    const tagSet = new Set<string>();
-    posts.forEach((post) => {
-      post.tags.forEach((tag) => tagSet.add(tag));
-    });
-    return Array.from(tagSet).sort();
-  }, [posts]);
+  // Use the custom hook for all filtering, search, and pagination logic
+  const {
+    filteredPosts,
+    paginatedPosts,
+    allTags,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    searchQuery,
+    setSearchQuery,
+    selectedTags,
+    addTag,
+    removeTag,
+    filterMode,
+    setFilterMode,
+    showOnlyFeatured,
+    setShowOnlyFeatured,
+    clearFilters: clearAllFilters,
+    hasActiveFilters,
+  } = useBlogFilters({ posts, initialFilters });
 
-  // Filter posts based on search criteria
-  const filteredPosts = useMemo(() => {
-    return posts.filter((post) => {
-      // Search in title, summary, and tags
-      const searchInContent = searchQuery.toLowerCase();
-      const matchesSearch =
-        !searchQuery ||
-        post.title.toLowerCase().includes(searchInContent) ||
-        post.summary.toLowerCase().includes(searchInContent) ||
-        post.tags.some((tag) => tag.toLowerCase().includes(searchInContent));
-
-      // Filter by selected tags (any/all)
-      const matchesTag =
-        selectedTags.length === 0
-          ? true
-          : filterMode === "all"
-          ? selectedTags.every((t) => post.tags.includes(t))
-          : selectedTags.some((t) => post.tags.includes(t));
-
-      // Filter by featured status
-      const matchesFeatured = !showOnlyFeatured || post.featured;
-
-      return matchesSearch && matchesTag && matchesFeatured;
-    });
-  }, [posts, searchQuery, selectedTags, filterMode, showOnlyFeatured]);
-
-  // Paginate filtered posts
-  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-  const paginatedPosts = filteredPosts.slice(
-    startIndex,
-    startIndex + POSTS_PER_PAGE
-  );
-
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedTags, filterMode, showOnlyFeatured]);
-
+  // Wrap clearFilters to also reset the tag picker
   const clearFilters = () => {
-    setSearchQuery("");
-    setSelectedTags([]);
-    setFilterMode("any");
-    setShowOnlyFeatured(false);
+    clearAllFilters();
     setTagPicker("");
-    setCurrentPage(1);
-  };
-
-  // Helpers to manage selected tags
-  const addTag = (tag: string) => {
-    if (!tag) return;
-    setSelectedTags((prev) => (prev.includes(tag) ? prev : [...prev, tag]));
-  };
-  const removeTag = (tag: string) => {
-    setSelectedTags((prev) => prev.filter((t) => t !== tag));
   };
 
   return (
@@ -157,9 +113,7 @@ export default function BlogList({
                   />
                 </div>
                 {/* Clear Filters - separate from search bar but shrinks it */}
-                {(searchQuery ||
-                  selectedTags.length > 0 ||
-                  showOnlyFeatured) && (
+                {hasActiveFilters && (
                   <Button
                     variant="outline"
                     onClick={clearFilters}
@@ -292,7 +246,7 @@ export default function BlogList({
                       <CardContent className="pt-0">
                         {/* Tags */}
                         <div className="flex flex-wrap gap-1 mb-4">
-                          {post.tags.slice(0, 3).map((tag) => (
+                          {post.tags.slice(0, UI.MAX_VISIBLE_TAGS).map((tag) => (
                             <Badge
                               key={tag}
                               variant="outline"
@@ -307,7 +261,7 @@ export default function BlogList({
                               {tag}
                             </Badge>
                           ))}
-                          {post.tags.length > 3 && (
+                          {post.tags.length > UI.MAX_VISIBLE_TAGS && (
                             <DropdownMenu>
                               <DropdownMenuTrigger
                                 asChild
@@ -317,15 +271,15 @@ export default function BlogList({
                                   variant="outline"
                                   className="text-xs cursor-pointer"
                                   aria-label={`Show ${
-                                    post.tags.length - 3
+                                    post.tags.length - UI.MAX_VISIBLE_TAGS
                                   } more tags`}
                                   title="Show more tags"
                                 >
-                                  +{post.tags.length - 3}
+                                  +{post.tags.length - UI.MAX_VISIBLE_TAGS}
                                 </Badge>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="start">
-                                {post.tags.slice(3).map((tag) => (
+                                {post.tags.slice(UI.MAX_VISIBLE_TAGS).map((tag) => (
                                   <DropdownMenuItem
                                     key={tag}
                                     onSelect={() => addTag(tag)}
@@ -397,7 +351,7 @@ export default function BlogList({
             >
               <Button
                 variant="outline"
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                 disabled={currentPage === 1}
               >
                 Previous
@@ -440,9 +394,7 @@ export default function BlogList({
 
               <Button
                 variant="outline"
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
+                onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
                 disabled={currentPage === totalPages}
               >
                 Next

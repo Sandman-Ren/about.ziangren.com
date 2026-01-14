@@ -1,17 +1,15 @@
 "use client"
 
-import { useState, useCallback, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Github, Linkedin, Mail, MapPin } from "lucide-react"
+import { useEasterEgg } from "@/hooks/useEasterEgg"
+import { springs } from "@/lib/animations"
 
-// Timeout constant for bubble auto-hide
-const BUBBLE_TIMEOUT = 3000 // 3 seconds
-
-// Game quotes database
-const gameQuotes = [
+// Game quotes database - Blizzard classics
+const GAME_QUOTES = [
   // StarCraft II quotes
   "My life for Aiur!",
   "You must construct additional pylons.",
@@ -23,8 +21,8 @@ const gameQuotes = [
   "Power overwhelming!",
   "There is no cow level.",
   "Radio free zerg.",
-  
-  // WarCraft quotes  
+
+  // WarCraft quotes
   "Work complete.",
   "Jobs done!",
   "Ready to work!",
@@ -43,7 +41,7 @@ const gameQuotes = [
   "Off I go then!",
   "What joy!",
   "I hear and obey!",
-]
+] as const
 
 interface ChatBubbleProps {
   quote: string
@@ -82,31 +80,12 @@ function SvgBubble({ children }: { children: React.ReactNode }) {
 function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
   return (
     <motion.div
-      initial={{ 
-        opacity: 0, 
-        scale: 0.1,
-        y: -10
-      }}
-      animate={{ 
-        opacity: 1, 
-        scale: 1,
-        y: 0
-      }}
-      exit={{ 
-        opacity: 0, 
-        scale: 0.1,
-        y: -10
-      }}
-      transition={{ 
-        type: "spring",
-        stiffness: 700,
-        damping: 25,
-        mass: 0.8,
-      }}
-  className="absolute bottom-full left-full -ml-8 -mb-8 z-20 pointer-events-auto"
-      style={{
-        transformOrigin: "bottom left"
-      }}
+      initial={{ opacity: 0, scale: 0.1, y: -10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.1, y: -10 }}
+      transition={springs.snappy}
+      className="absolute bottom-full left-full -ml-8 -mb-8 z-20 pointer-events-auto"
+      style={{ transformOrigin: "bottom left" }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -123,80 +102,14 @@ function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
 }
 
 export function HeroSection() {
-  const [clickCount, setClickCount] = useState(0)
-  const [lastClickTime, setLastClickTime] = useState(0)
-  const [isEasterEggEnabled, setIsEasterEggEnabled] = useState(false)
-  const [showQuote, setShowQuote] = useState(false)
-  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0)
-  const [isHovering, setIsHovering] = useState(false)
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-
-  const handleAvatarClick = useCallback(() => {
-    const now = Date.now()
-    
-    // Reset counter if more than 3 seconds have passed
-    if (now - lastClickTime > 3000) {
-      setClickCount(1)
-    } else {
-      setClickCount(prev => prev + 1)
-    }
-    
-    setLastClickTime(now)
-    
-    if (!isEasterEggEnabled) {
-      // Enable easter egg on 5th click within 3 seconds
-      if (clickCount >= 4 && now - lastClickTime <= 3000) {
-        setIsEasterEggEnabled(true)
-        setClickCount(0)
-        setCurrentQuoteIndex(0)
-        setShowQuote(true)
-        
-        // Start timeout for auto-hide
-        if (timeoutRef.current) clearTimeout(timeoutRef.current)
-        timeoutRef.current = setTimeout(() => {
-          if (!isHovering) {
-            setShowQuote(false)
-          }
-        }, BUBBLE_TIMEOUT)
-      }
-    } else {
-      // Show next quote when easter egg is enabled
-      setCurrentQuoteIndex(prev => (prev + 1) % gameQuotes.length)
-      setShowQuote(true)
-      
-      // Start timeout for auto-hide
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      timeoutRef.current = setTimeout(() => {
-        if (!isHovering) {
-          setShowQuote(false)
-        }
-      }, BUBBLE_TIMEOUT)
-    }
-  }, [clickCount, lastClickTime, isEasterEggEnabled, isHovering])
-
-  const handleMouseEnter = useCallback(() => {
-    setIsHovering(true)
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-    }
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    setIsHovering(false)
-    // Start timeout when mouse leaves
-    timeoutRef.current = setTimeout(() => {
-      setShowQuote(false)
-    }, BUBBLE_TIMEOUT)
-  }, [])
-
-  // Clean up timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [])
+  // Easter egg hook - handles all click counting, timeouts, and state
+  const {
+    isVisible: showQuote,
+    currentItem: currentQuote,
+    handleClick: handleAvatarClick,
+    handleMouseEnter,
+    handleMouseLeave,
+  } = useEasterEgg({ items: [...GAME_QUOTES] })
 
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center px-4 py-16 overflow-hidden">
@@ -213,14 +126,8 @@ export function HeroSection() {
         >
           <div className="relative inline-block">
             <motion.div
-              whileTap={{ 
-                scale: 0.85
-              }}
-              transition={{ 
-                type: "spring",
-                stiffness: 500,
-                damping: 15
-              }}
+              whileTap={{ scale: 0.85 }}
+              transition={springs.bouncy}
             >
               <Avatar 
                 className="w-32 h-32 mx-auto cursor-pointer ring-4 ring-border hover:ring-primary/50 transition-all duration-300 select-none"
@@ -240,10 +147,10 @@ export function HeroSection() {
             </motion.div>
             
             <AnimatePresence mode="wait" initial={false}>
-              {showQuote && (
+              {showQuote && currentQuote && (
                 <ChatBubble
-                  key={gameQuotes[currentQuoteIndex]}
-                  quote={gameQuotes[currentQuoteIndex]}
+                  key={currentQuote}
+                  quote={currentQuote}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 />

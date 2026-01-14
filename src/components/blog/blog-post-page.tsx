@@ -7,7 +7,10 @@ import { Separator } from '@/components/ui/separator'
 import { Calendar, Clock, ArrowLeft, ExternalLink, MessageCircle, User } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { generateGitHubIssueUrl, formatDate } from '@/lib/client-utils'
+import { generateGitHubIssueUrl } from '@/lib/urls'
+import { formatDate } from '@/lib/formatting'
+import { slideInLeft, fade } from '@/lib/animations'
+import { ANIMATION } from '@/lib/constants'
 import Image from 'next/image'
 
 interface BlogPostPageProps {
@@ -24,9 +27,10 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
       {post.coverImage && (
         <motion.div
           className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden flex-shrink-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          initial="initial"
+          animate="animate"
+          variants={fade}
+          transition={{ duration: ANIMATION.DURATION.SLOW }}
         >
           <Image
             src={post.coverImage}
@@ -45,9 +49,10 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
         {/* Back to Blog Link */}
         <motion.div
           className="mb-8"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+          initial="initial"
+          animate="animate"
+          variants={slideInLeft}
+          transition={{ duration: ANIMATION.DURATION.DEFAULT }}
         >
           <Link href="/blog">
             <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
