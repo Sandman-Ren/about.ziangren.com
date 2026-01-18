@@ -7,6 +7,8 @@ import rehypeSlug from 'rehype-slug'
 const nextConfig: NextConfig = {
   // Configure `pageExtensions` to include MDX files
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  // no basePath because we're using custom domain
+  // basePath: 'about.ziangren.com',
   // Enable static export for GitHub Pages
   output: 'export',
   trailingSlash: true,
