@@ -3,6 +3,7 @@ export const slugs = [
   "building-modern-react-typescript",
   "building-my-own-server",
   "my-cs-journey",
+  "oauth2-keycloak-traefik-setup",
   "typography-showcase",
   "welcome-to-my-new-blog"
 ] as const

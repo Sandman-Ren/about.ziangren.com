@@ -1,6 +1,35 @@
 {
   "posts": [
     {
+      "slug": "oauth2-keycloak-traefik-setup",
+      "title": "Setting Up OAuth2 Authentication with Keycloak and Traefik: A Troubleshooting Journey",
+      "summary": "A comprehensive guide to configuring OAuth2-Proxy, Keycloak, and Traefik for self-hosted application authentication, covering common pitfalls like hairpin NAT, Vault sealing, and Docker API version mismatches.",
+      "date": "2026-01-15",
+      "tags": [
+        "OAuth2",
+        "Keycloak",
+        "Traefik",
+        "Docker",
+        "self-hosting"
+      ],
+      "keywords": [
+        "OAuth2-Proxy",
+        "Keycloak",
+        "Traefik",
+        "ForwardAuth",
+        "HashiCorp Vault",
+        "hairpin NAT",
+        "OIDC",
+        "authentication",
+        "Docker networking"
+      ],
+      "published": true,
+      "featured": false,
+      "aiAssisted": false,
+      "author": "Ziang Ren",
+      "readingTime": 6
+    },
+    {
       "slug": "typography-showcase",
       "title": "Typography Showcase",
       "summary": "A comprehensive demonstration of all typography styles, components, and formatting options available in our blog posts. This post serves as both a style guide and visual test.",

@@ -1,0 +1,337 @@
+# Setting Up OAuth2 Authentication with Keycloak and Traefik: A Troubleshooting Journey
+
+*A comprehensive guide to configuring OAuth2-Proxy, Keycloak, and Traefik for self-hosted application authentication—and the pitfalls we encountered along the way.*
+
+---
+
+## The Goal
+
+Protect self-hosted applications (like Stirling-PDF) behind OAuth2 authentication using:
+- **Traefik** as reverse proxy
+- **Keycloak** as OIDC identity provider
+- **OAuth2-Proxy** as ForwardAuth middleware
+- **HashiCorp Vault** for secrets management
+
+The architecture:
+```
+Internet → Traefik (443) → OAuth2-Proxy (ForwardAuth) → Application
+                                    ↓
+                            Keycloak (OIDC)
+```
+
+---
+
+## Problem 1: The Hairpin NAT Issue
+
+### Symptoms
+OAuth2-Proxy failed to start with repeated timeout errors:
+```
+Get "https://auth.example.com/.well-known/openid-configuration":
+dial tcp 203.0.113.50:443: i/o timeout
+```
+
+### Root Cause
+**Hairpin NAT** (also called NAT loopback) occurs when a container tries to reach an external domain that resolves to the host's public IP. The packet goes out through the router but can't properly return because source and destination are both internal.
+
+```
+oauth2-proxy → auth.example.com (203.0.113.50) → TIMEOUT
+               (public IP, can't hairpin through NAT)
+```
+
+### Solution
+Add `extra_hosts` to the OAuth2-Proxy docker-compose to resolve the domain to Traefik's internal Docker IP:
+
+```yaml
+# oauth2-proxy/docker-compose.yaml
+oauth2-proxy:
+  # ... other config ...
+  extra_hosts:
+    - "auth.example.com:172.18.0.3"  # Traefik's internal IP
+```
+
+This makes OAuth2-Proxy reach Keycloak through Traefik internally:
+```
+oauth2-proxy → traefik:443 → keycloak:8080 ✓
+```
+
+**Finding Traefik's IP:**
+```bash
+docker inspect traefik --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+```
+
+---
+
+## Problem 2: Vault Was Sealed
+
+### Symptoms
+Keycloak and OAuth2-Proxy couldn't start because their Vault Agent sidecars failed:
+```
+Vault is sealed
+```
+
+### Root Cause
+HashiCorp Vault seals itself on restart as a security feature. The unseal key was lost.
+
+### Solution
+Re-initialize Vault from scratch:
+
+```bash
+# Stop dependent services
+docker compose -f keycloak/docker-compose.yaml down
+docker compose -f oauth2-proxy/docker-compose.yaml down
+
+# Reset Vault
+docker compose -f vault/docker-compose.yaml down
+docker volume rm vault_vault-data
+
+# Fix volume permissions (Vault runs as UID 100)
+docker run --rm -v vault_vault-data:/data alpine chown -R 100:100 /data
+
+# Start and initialize
+docker compose -f vault/docker-compose.yaml up -d
+docker exec vault sh -c 'VAULT_ADDR=http://127.0.0.1:8200 vault operator init -key-shares=1 -key-threshold=1'
+```
+
+**Save the unseal key and root token immediately!**
+
+Then configure Vault:
+```bash
+# Unseal
+docker exec vault sh -c 'VAULT_ADDR=http://127.0.0.1:8200 vault operator unseal <UNSEAL_KEY>'
+
+# Enable secrets engine and auth
+vault secrets enable -path=secret kv-v2
+vault auth enable approle
+
+# Create policies
+vault policy write keycloak - <<EOF
+path "secret/data/keycloak" {
+  capabilities = ["read"]
+}
+EOF
+
+vault policy write oauth2-proxy - <<EOF
+path "secret/data/oauth2-proxy" {
+  capabilities = ["read"]
+}
+EOF
+
+# Create AppRoles
+vault write auth/approle/role/keycloak token_policies="keycloak" token_ttl=1h
+vault write auth/approle/role/oauth2-proxy token_policies="oauth2-proxy" token_ttl=1h
+```
+
+---
+
+## Problem 3: Traefik Docker API Version Mismatch
+
+### Symptoms
+Traefik logs showed continuous errors:
+```
+client version 1.24 is too old. Minimum supported API version is 1.44
+```
+
+### Root Cause
+Docker Engine 29.x requires API version 1.44+, but the older Traefik image's Docker SDK was negotiating at version 1.24.
+
+### Solution
+Update to the latest Traefik image:
+
+```yaml
+# traefik/docker-compose.yaml
+services:
+  traefik:
+    image: traefik:latest  # Was traefik:v3.5
+    environment:
+      - DOCKER_API_VERSION=1.44  # Explicit API version
+```
+
+Then recreate:
+```bash
+docker pull traefik:latest
+docker compose -f traefik/docker-compose.yaml up -d --force-recreate
+```
+
+---
+
+## Problem 4: passHostHeader Configuration
+
+### Symptoms
+OAuth2-Proxy didn't receive the original `Host` header, breaking redirect logic.
+
+### Root Cause
+In `traefik/dynamic/middlewares.yml`, the OAuth2-Proxy service had:
+```yaml
+oauth2-proxy-public:
+  loadBalancer:
+    passHostHeader: false  # Problem!
+```
+
+### Solution
+Change to `true`:
+```yaml
+oauth2-proxy-public:
+  loadBalancer:
+    passHostHeader: true
+```
+
+Traefik auto-reloads dynamic configuration—no restart needed.
+
+---
+
+## Problem 5: OAuth2 Client Credentials Mismatch
+
+### Symptoms
+After logging into Keycloak, OAuth2-Proxy returned 500 error:
+```
+Error redeeming code: oauth2: "unauthorized_client" "Invalid client credentials"
+```
+
+### Root Cause
+Docker Compose loads `env_file` at **container creation time**, not runtime. Even after updating Vault secrets, the running container still had old credentials.
+
+### Solution
+Force recreate the container to load fresh secrets:
+```bash
+docker compose -f oauth2-proxy/docker-compose.yaml up -d --force-recreate
+```
+
+Verify the secret is loaded:
+```bash
+docker inspect oauth2-proxy --format '{{range .Config.Env}}{{println .}}{{end}}' | grep CLIENT_SECRET
+```
+
+---
+
+## The Complete OAuth2-Proxy Configuration
+
+### Vault Secrets
+```bash
+vault kv put secret/oauth2-proxy \
+    OAUTH2_PROXY_CLIENT_ID=my-oauth2-client \
+    OAUTH2_PROXY_CLIENT_SECRET="<from-keycloak>" \
+    OAUTH2_PROXY_COOKIE_SECRET="<32-byte-random>" \
+    OAUTH2_PROXY_OIDC_ISSUER_URL="https://auth.example.com/realms/my-realm" \
+    OAUTH2_PROXY_REDIRECT_URL="https://login.apps.example.com/oauth2/callback" \
+    OAUTH2_PROXY_COOKIE_DOMAINS=".apps.example.com" \
+    OAUTH2_PROXY_WHITELIST_DOMAINS=".apps.example.com,auth.example.com" \
+    OAUTH2_PROXY_EMAIL_DOMAINS="*"
+```
+
+### Docker Compose
+```yaml
+services:
+  oauth2-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+    container_name: oauth2-proxy
+    restart: unless-stopped
+    env_file:
+      - ./secrets/oauth2-proxy.env
+    environment:
+      OAUTH2_PROXY_HTTP_ADDRESS: "0.0.0.0:4180"
+      OAUTH2_PROXY_PROVIDER: keycloak-oidc
+      OAUTH2_PROXY_COOKIE_SECURE: "true"
+      OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
+      OAUTH2_PROXY_REVERSE_PROXY: "true"
+      OAUTH2_PROXY_UPSTREAMS: "static://200"
+      OAUTH2_PROXY_SESSION_STORE_TYPE: cookie
+      OAUTH2_PROXY_PASS_ACCESS_TOKEN: "true"
+      OAUTH2_PROXY_COOKIE_SAMESITE: lax
+    extra_hosts:
+      - "auth.example.com:172.18.0.3"  # Hairpin NAT fix
+    networks:
+      - proxy
+```
+
+### Traefik Middleware Chain
+```yaml
+# traefik/dynamic/middlewares.yml
+http:
+  middlewares:
+    apps-auth-chain:
+      chain:
+        middlewares:
+          - oauth2-errors
+          - oauth2-forwardauth
+          - secure-headers
+
+    oauth2-errors:
+      errors:
+        status:
+          - "401-403"
+        service: oauth2-proxy-public
+        query: "/oauth2/sign_in?rd={url}"
+
+    oauth2-forwardauth:
+      forwardAuth:
+        address: "http://oauth2-proxy:4180/oauth2/auth"
+        trustForwardHeader: true
+        authResponseHeaders:
+          - "X-Auth-Request-User"
+          - "X-Auth-Request-Email"
+
+  services:
+    oauth2-proxy-public:
+      loadBalancer:
+        passHostHeader: true  # Important!
+        servers:
+          - url: "http://oauth2-proxy:4180"
+```
+
+---
+
+## Key Takeaways
+
+1. **Hairpin NAT is real** - When containers need to reach services by public domain, use `extra_hosts` to route internally.
+
+2. **Vault sealing is a feature, not a bug** - Always store unseal keys securely. Consider auto-unseal with cloud KMS for production.
+
+3. **Docker API versions matter** - Keep images updated when upgrading Docker Engine.
+
+4. **env_file loads at creation time** - Always `--force-recreate` after changing secrets.
+
+5. **Cookie domains need the leading dot** - `.apps.example.com` covers all subdomains; `apps.example.com` doesn't.
+
+6. **passHostHeader: true** - Critical for OAuth2-Proxy to know the original request hostname.
+
+---
+
+## Debugging Checklist
+
+When OAuth2 authentication fails:
+
+1. **Check OAuth2-Proxy logs:**
+   ```bash
+   docker logs oauth2-proxy --tail 50
+   ```
+
+2. **Check Keycloak events:**
+   ```bash
+   docker logs keycloak | grep -i error
+   ```
+
+3. **Verify secrets match:**
+   ```bash
+   # In Vault
+   vault kv get secret/oauth2-proxy
+
+   # In container
+   docker inspect oauth2-proxy --format '{{.Config.Env}}' | grep CLIENT
+   ```
+
+4. **Test OIDC discovery:**
+   ```bash
+   curl -s https://auth.example.com/realms/my-realm/.well-known/openid-configuration | jq .
+   ```
+
+5. **Clear browser cookies** - Stale session cookies cause mysterious failures.
+
+---
+
+## Annotations
+
+> **DNS/Network Access Note:** During this setup, we encountered a situation where our local machine couldn't resolve the domain due to stale DNS cache from Cloudflare proxy changes. If you face similar issues, you can temporarily add entries to your hosts file (`C:\Windows\System32\drivers\etc\hosts` on Windows or `/etc/hosts` on Linux/Mac) pointing your domains to the server's LAN IP. This allows you to access services like the Keycloak admin console while DNS propagates.
+
+---
+
+*Written after a productive debugging session. May your OAuth flows be ever authenticated.*
