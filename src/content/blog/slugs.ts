@@ -5,6 +5,7 @@ export const slugs = [
   "my-cs-journey",
   "oauth2-keycloak-traefik-setup",
   "typography-showcase",
+  "uptime-kuma-setup",
   "welcome-to-my-new-blog"
 ] as const
 

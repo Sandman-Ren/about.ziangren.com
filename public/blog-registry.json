@@ -1,6 +1,35 @@
 {
   "posts": [
     {
+      "slug": "uptime-kuma-setup",
+      "title": "Self-Hosted Monitoring with Uptime Kuma: Docker Container and HTTP Endpoint Monitoring",
+      "summary": "A complete guide to setting up Uptime Kuma for self-hosted monitoring with Docker container health checks, HTTP endpoint monitoring, Traefik integration with IP allowlisting, and email alerts via Resend SMTP.",
+      "date": "2026-01-19",
+      "tags": [
+        "monitoring",
+        "Docker",
+        "Traefik",
+        "self-hosting"
+      ],
+      "keywords": [
+        "Uptime Kuma",
+        "monitoring",
+        "Docker",
+        "Traefik",
+        "self-hosted",
+        "health checks",
+        "email alerts",
+        "Resend SMTP",
+        "container monitoring",
+        "IP allowlist"
+      ],
+      "published": true,
+      "featured": false,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 5
+    },
+    {
       "slug": "oauth2-keycloak-traefik-setup",
       "title": "Setting Up OAuth2 Authentication with Keycloak and Traefik: A Troubleshooting Journey",
       "summary": "A comprehensive guide to configuring OAuth2-Proxy, Keycloak, and Traefik for self-hosted application authentication, covering common pitfalls like hairpin NAT, Vault sealing, and Docker API version mismatches.",
