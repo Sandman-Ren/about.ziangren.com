@@ -1,0 +1,279 @@
+# Uptime Kuma Setup for ziangren.com
+
+Self-hosted monitoring with email alerts for Docker services.
+
+## Overview
+
+| Setting | Value |
+|---------|-------|
+| **URL** | `https://status.ziangren.com` |
+| **Access** | LAN-only (IP allowlist) |
+| **Alerts** | Email via Resend SMTP |
+| **Data** | Docker volume `uptime-kuma-data` |
+
+## Architecture
+
+```
+LAN/VPN → Traefik (ipallowlist-admin) → Uptime Kuma:3001
+                                              │
+              ┌───────────────────────────────┼───────────────────────────────┐
+              │                               │                               │
+              ▼                               ▼                               ▼
+       Docker Socket                    HTTP Checks                    Email Alerts
+    (container status)               (endpoint health)               (Resend SMTP)
+```
+
+## Files
+
+```
+/home/sandman/deployments/
+├── uptime-kuma/
+│   ├── docker-compose.yaml      # Service definition
+│   ├── add-monitors.py          # Bulk monitor setup script
+│   └── README.md                # This file
+└── traefik/
+    └── dynamic/
+        └── uptime-kuma.yml      # Traefik routing (IP allowlist)
+```
+
+---
+
+## Docker Compose
+
+**File:** `/home/sandman/deployments/uptime-kuma/docker-compose.yaml`
+
+```yaml
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    volumes:
+      - uptime-kuma-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+
+volumes:
+  uptime-kuma-data:
+
+networks:
+  proxy:
+    external: true
+    name: proxy
+```
+
+### Key Points
+- **Docker socket** mounted read-only for container monitoring
+- **Named volume** for persistent SQLite database
+- **No ports exposed** - Traefik routes internally
+
+---
+
+## Traefik Route
+
+**File:** `/home/sandman/deployments/traefik/dynamic/uptime-kuma.yml`
+
+```yaml
+http:
+  routers:
+    uptime-kuma:
+      rule: Host(`status.ziangren.com`)
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: le-dns  # DNS-01 challenge (no public DNS needed)
+      service: uptime-kuma
+      middlewares:
+        - ipallowlist-admin   # LAN + VPN only
+
+  services:
+    uptime-kuma:
+      loadBalancer:
+        servers:
+          - url: "http://uptime-kuma:3001"
+```
+
+### Access Control
+Uses `ipallowlist-admin` middleware (defined in `middlewares.yml`):
+- `192.168.0.0/24` - LAN
+- `10.8.0.0/24` - VPN
+- `127.0.0.1/32` - Localhost
+
+---
+
+## Commands
+
+```bash
+# Start
+docker compose -f /home/sandman/deployments/uptime-kuma/docker-compose.yaml up -d
+
+# Stop
+docker compose -f /home/sandman/deployments/uptime-kuma/docker-compose.yaml down
+
+# Logs
+docker compose -f /home/sandman/deployments/uptime-kuma/docker-compose.yaml logs -f
+
+# Restart
+docker compose -f /home/sandman/deployments/uptime-kuma/docker-compose.yaml down && \
+docker compose -f /home/sandman/deployments/uptime-kuma/docker-compose.yaml up -d
+```
+
+---
+
+## Initial Setup (Web UI)
+
+### 1. Create Admin Account
+Access `https://status.ziangren.com` from LAN and create your admin account.
+
+### 2. Configure Docker Host
+Required for container monitoring:
+
+1. Go to **Settings → Docker Hosts**
+2. Click **Setup Docker Host**
+3. Configure:
+   | Setting | Value |
+   |---------|-------|
+   | Friendly Name | `Local Docker` |
+   | Connection Type | `Socket` |
+   | Docker Daemon | `/var/run/docker.sock` |
+4. Click **Save**
+
+### 3. Configure Email Notifications
+Using existing Resend SMTP setup:
+
+1. Go to **Settings → Notifications**
+2. Click **Setup Notification**
+3. Configure:
+   | Setting | Value |
+   |---------|-------|
+   | Notification Type | SMTP |
+   | Friendly Name | `Resend` |
+   | SMTP Host | `smtp.resend.com` |
+   | SMTP Port | `465` |
+   | Security | SSL/TLS |
+   | Username | `resend` |
+   | Password | `<your Resend API key>` |
+   | From Email | `alerts@ziangren.com` |
+   | To Email | `<your email>` |
+4. Click **Test** to verify, then **Save**
+
+---
+
+## Monitors
+
+### Docker Container Monitors
+
+| Monitor Name | Container | Description |
+|--------------|-----------|-------------|
+| Traefik Container | `traefik` | Reverse proxy |
+| Vault Container | `vault` | Secrets management |
+| Keycloak Container | `keycloak` | OIDC provider |
+| Keycloak Postgres | `keycloak-postgres` | Keycloak database |
+| OAuth2-Proxy Container | `oauth2-proxy` | ForwardAuth middleware |
+| Cloudflared Container | `cloudflared` | Cloudflare Tunnel |
+| Portainer Container | `portainer` | Docker management UI |
+| Stirling-PDF Container | `stirling-pdf` | PDF processor |
+
+### HTTP Endpoint Monitors
+
+| Monitor Name | URL | Expected | Notes |
+|--------------|-----|----------|-------|
+| Stirling PDF (Internal) | `http://stirling-pdf:8080/api/v1/info/status` | 200 | Direct health check |
+| Stirling PDF (Public Auth) | `https://pdf.ziangren.com` | 401/302 | OAuth2 redirect expected |
+| Keycloak OIDC Discovery | `https://auth.ziangren.com/realms/apps.ziangren.com/.well-known/openid-configuration` | 200 | OIDC metadata |
+| OAuth2-Proxy Health | `https://login.ziangren.com/ping` | 200 | Health endpoint |
+| Vault Health (Internal) | `http://vault:8200/v1/sys/health` | 200 | Initialized & unsealed |
+
+### Monitoring OAuth2-Protected Apps
+
+For apps behind OAuth2 (like Stirling PDF), use **two monitors**:
+
+1. **Internal Health** - Direct URL (`http://container:port/health`)
+   - Tests: App is actually running
+   - Expected: 200
+
+2. **Public Auth Check** - Public URL (`https://app.domain.com`)
+   - Tests: Cloudflare + Traefik + OAuth2 working
+   - Expected: 401 or 302 (redirect to login)
+
+This way you know if the app crashed (internal fails) vs infrastructure issue (public fails).
+
+---
+
+## Bulk Monitor Setup Script
+
+**File:** `/home/sandman/deployments/uptime-kuma/add-monitors.py`
+
+A Python script to batch-add all monitors using the `uptime-kuma-api` library.
+
+### Usage
+
+```bash
+# Install the API library
+pip install uptime-kuma-api
+
+# Run from within Docker network
+docker run --rm -it --network proxy \
+  -v /home/sandman/deployments/uptime-kuma:/app \
+  python:3.12-slim \
+  bash -c "pip install uptime-kuma-api && python /app/add-monitors.py"
+```
+
+### Prerequisites
+1. Complete initial Uptime Kuma setup (admin account)
+2. Configure Docker Host in Settings
+3. Have your admin credentials ready
+
+---
+
+## Backup & Restore
+
+### Backup
+```bash
+# Backup the Docker volume
+docker run --rm \
+  -v uptime-kuma_uptime-kuma-data:/data:ro \
+  -v $(pwd):/backup \
+  alpine tar czf /backup/uptime-kuma-backup-$(date +%Y%m%d).tar.gz -C /data .
+```
+
+### Restore
+```bash
+# Restore from backup
+docker compose -f uptime-kuma/docker-compose.yaml down
+docker run --rm \
+  -v uptime-kuma_uptime-kuma-data:/data \
+  -v $(pwd):/backup \
+  alpine sh -c "rm -rf /data/* && tar xzf /backup/uptime-kuma-backup-YYYYMMDD.tar.gz -C /data"
+docker compose -f uptime-kuma/docker-compose.yaml up -d
+```
+
+---
+
+## Troubleshooting
+
+### Can't access from LAN
+- Verify your IP is in the allowlist (`middlewares.yml`)
+- Check Traefik logs: `docker logs traefik`
+
+### Certificate errors
+- Using DNS-01 challenge via `le-dns` resolver
+- Requires Cloudflare API token in Vault (see Traefik DNS-01 setup)
+
+### Docker monitors not working
+- Verify Docker Host is configured in Settings
+- Check Docker socket is mounted: `docker exec uptime-kuma ls -la /var/run/docker.sock`
+
+### Email notifications not sending
+- Test SMTP in Settings → Notifications
+- Check Resend dashboard for delivery status
+- Verify "From" email domain is verified in Resend
+
+---
+
+## Related Configuration
+
+- **Traefik middlewares:** `/home/sandman/deployments/traefik/dynamic/middlewares.yml`
+- **DNS-01 certificates:** Traefik uses Cloudflare API via Vault Agent pattern
+- **Resend SMTP:** Same credentials used by Keycloak for email verification
