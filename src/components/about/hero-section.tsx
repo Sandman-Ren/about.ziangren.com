@@ -125,7 +125,7 @@ export function HeroSection() {
   const recentPosts = getAllBlogPosts().slice(0, 3)
 
   return (
-    <section className="relative min-h-[100dvh] lg:h-[100dvh] lg:max-h-[100dvh] flex flex-col px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="relative min-h-[100dvh] lg:min-h-0 lg:h-full flex flex-col px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/30" />
       {/* Subtle grid pattern */}
