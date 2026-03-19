@@ -301,27 +301,26 @@ export function HeroSection() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-3">
             {recentPosts.map((post) => (
-              <div key={post.slug}>
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="group block p-4 -mx-4 rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground/60">
-                    <Clock className="w-3 h-3" />
-                    <time dateTime={post.date}>{formatDate(post.date)}</time>
-                    <span className="text-muted-foreground/30">
-                      &middot;
-                    </span>
-                    <span>{post.readingTime} min read</span>
-                  </div>
-                  <h3 className="font-medium text-foreground/90 group-hover:text-foreground transition-colors leading-snug line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <p className="mt-1.5 text-sm text-muted-foreground/70 line-clamp-2 leading-relaxed">
-                    {post.summary}
-                  </p>
-                </Link>
-              </div>
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="group block rounded-lg border border-transparent p-4 card-hover-shadow"
+              >
+                <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground/60">
+                  <Clock className="w-3 h-3" />
+                  <time dateTime={post.date}>{formatDate(post.date)}</time>
+                  <span className="text-muted-foreground/30">
+                    &middot;
+                  </span>
+                  <span>{post.readingTime} min read</span>
+                </div>
+                <h3 className="font-medium text-foreground/90 group-hover:text-foreground transition-colors leading-snug line-clamp-2">
+                  {post.title}
+                </h3>
+                <p className="mt-1.5 text-sm text-muted-foreground/70 line-clamp-2 leading-relaxed">
+                  {post.summary}
+                </p>
+              </Link>
             ))}
           </div>
         </motion.div>
