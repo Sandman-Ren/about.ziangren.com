@@ -1,12 +1,15 @@
 "use client"
 
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Github, Linkedin, Mail, MapPin } from "lucide-react"
+import { Github, Linkedin, Mail, MapPin, ArrowRight, Clock, Server, Gamepad2, Terminal } from "lucide-react"
 import { useEasterEgg } from "@/hooks/useEasterEgg"
 import { springs } from "@/lib/animations"
+import { EXTERNAL_URLS } from "@/lib/constants"
+import { getAllBlogPosts } from "@/lib/blog/registry"
+import { formatDate } from "@/lib/formatting"
 
 // Game quotes database - Blizzard classics
 const GAME_QUOTES = [
@@ -101,6 +104,13 @@ function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
   )
 }
 
+// "Currently" items that show personality
+const CURRENTLY_ITEMS = [
+  { icon: Server, text: "Self-hosting everything on a home server" },
+  { icon: Gamepad2, text: "Laddering in StarCraft II" },
+  { icon: Terminal, text: "Building with Next.js and TypeScript" },
+]
+
 export function HeroSection() {
   // Easter egg hook - handles all click counting, timeouts, and state
   const {
@@ -111,144 +121,238 @@ export function HeroSection() {
     handleMouseLeave,
   } = useEasterEgg({ items: [...GAME_QUOTES] })
 
+  // Get recent blog posts for the below-fold section
+  const recentPosts = getAllBlogPosts().slice(0, 3)
+
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center px-4 py-16 overflow-hidden">
+    <section className="relative min-h-[100dvh] flex flex-col px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/30"></div>
-      
-      <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
-        {/* Profile Avatar with Easter Egg */}
-        <motion.div 
-          className="relative inline-block"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="relative inline-block">
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/30" />
+      {/* Subtle grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,
+          backgroundSize: '32px 32px',
+        }}
+      />
+
+      {/* Main hero content - asymmetric layout */}
+      <div className="relative z-10 flex-1 flex items-center w-full max-w-6xl mx-auto py-12 md:py-0">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:gap-16 items-center w-full">
+
+          {/* Left column - text content */}
+          <div className="space-y-6 md:space-y-8 order-2 md:order-1 text-center md:text-left">
+            {/* Name */}
             <motion.div
-              whileTap={{ scale: 0.85 }}
-              transition={springs.bouncy}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <Avatar 
-                className="w-32 h-32 mx-auto cursor-pointer ring-4 ring-border hover:ring-primary/50 transition-all duration-300 select-none"
-                onClick={handleAvatarClick}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <AvatarImage 
-                  src="/profile.jpg" 
-                  alt="Ziang Ren"
-                  className="object-cover object-top"
-                />
-                <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
-                  ZR
-                </AvatarFallback>
-              </Avatar>
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter">
+                <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/50 bg-clip-text text-transparent">
+                  Ziang Ren
+                </span>
+              </h1>
             </motion.div>
-            
-            <AnimatePresence mode="wait" initial={false}>
-              {showQuote && currentQuote && (
-                <ChatBubble
-                  key={currentQuote}
-                  quote={currentQuote}
+
+            {/* Subtitle */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+            >
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
+                Software engineer who builds things for the web,
+                <br className="hidden sm:block" />
+                then writes about what broke along the way.
+              </p>
+            </motion.div>
+
+            {/* Bio */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="max-w-lg mx-auto md:mx-0"
+            >
+              <p className="text-base text-muted-foreground/80 leading-relaxed">
+                Based in Toronto. I spend my days writing code and my nights tinkering with
+                self-hosted infrastructure, playing Blizzard games, and convincing myself that
+                one more Traefik config change will finally fix everything.
+              </p>
+            </motion.div>
+
+            {/* Currently up to */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.55 }}
+              className="space-y-3 max-w-lg mx-auto md:mx-0"
+            >
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                Currently
+              </p>
+              <div className="space-y-2">
+                {CURRENTLY_ITEMS.map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.65 + i * 0.1 }}
+                    className="flex items-center gap-3 text-sm text-muted-foreground justify-center md:justify-start"
+                  >
+                    <item.icon className="w-4 h-4 shrink-0 text-foreground/40" />
+                    <span>{item.text}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Social links and location */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.85 }}
+              className="flex flex-col sm:flex-row items-center gap-4 pt-2 justify-center md:justify-start"
+            >
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm">Toronto, Canada</span>
+              </div>
+              <div className="hidden sm:block w-1 h-1 bg-muted-foreground/40 rounded-full" />
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" asChild>
+                  <a
+                    href={EXTERNAL_URLS.GITHUB_PROFILE}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    <Github className="w-4 h-4" />
+                    GitHub
+                  </a>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <a
+                    href={EXTERNAL_URLS.LINKEDIN}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                    LinkedIn
+                  </a>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <a
+                    href="mailto:contact@ziangren.com"
+                    className="flex items-center gap-2"
+                  >
+                    <Mail className="w-4 h-4" />
+                    Contact
+                  </a>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right column - avatar */}
+          <motion.div
+            className="relative order-1 md:order-2 flex justify-center md:justify-end"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <div className="relative inline-block">
+              <motion.div
+                whileTap={{ scale: 0.85 }}
+                transition={springs.bouncy}
+              >
+                <Avatar
+                  className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 cursor-pointer ring-4 ring-border hover:ring-primary/50 transition-all duration-300 select-none shadow-xl"
+                  onClick={handleAvatarClick}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
-                />
-              )}
-            </AnimatePresence>
+                >
+                  <AvatarImage
+                    src="/profile.jpg"
+                    alt="Ziang Ren"
+                    className="object-cover object-top"
+                  />
+                  <AvatarFallback className="text-4xl font-bold bg-primary text-primary-foreground">
+                    ZR
+                  </AvatarFallback>
+                </Avatar>
+              </motion.div>
+
+              <AnimatePresence mode="wait" initial={false}>
+                {showQuote && currentQuote && (
+                  <ChatBubble
+                    key={currentQuote}
+                    quote={currentQuote}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Below-fold section: Recent writing */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto pb-12 md:pb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.0 }}
+        >
+          {/* Divider */}
+          <div className="border-t border-border/60 mb-8" />
+
+          <div className="flex items-baseline justify-between mb-6">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground/60">
+              Recent Writing
+            </h2>
+            <Link
+              href="/blog"
+              className="group flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              All posts
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
           </div>
-        </motion.div>
 
-        {/* Name and Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="space-y-4"
-        >
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              Ziang Ren
-            </span>
-          </h1>
-          <p className="text-xl sm:text-2xl text-muted-foreground font-medium">
-            Software Engineer & Tech Enthusiast
-          </p>
-        </motion.div>
-
-        {/* Bio */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="max-w-2xl mx-auto space-y-4"
-        >
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Passionate about building innovative solutions at the intersection of technology and creativity. 
-            I love exploring new frameworks, sharing knowledge through writing, and crafting meaningful digital experiences.
-          </p>
-        </motion.div>
-
-        {/* Skills/Tags */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="flex flex-wrap justify-center gap-2"
-        >
-          <Badge variant="secondary">Full Stack Development</Badge>
-          <Badge variant="secondary">TypeScript</Badge>
-          <Badge variant="secondary">React</Badge>
-          <Badge variant="secondary">Next.js</Badge>
-          <Badge variant="secondary">Node.js</Badge>
-          <Badge variant="secondary">Cloud Architecture</Badge>
-          <Badge variant="secondary">DevOps</Badge>
-        </motion.div>
-
-        {/* Contact Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 text-muted-foreground"
-        >
-          <div className="flex items-center gap-1">
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm">Toronto, Canada</span>
-          </div>
-          <div className="hidden sm:block w-1 h-1 bg-muted-foreground rounded-full"></div>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild>
-              <a 
-                href="https://github.com/Sandman-Ren" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-2"
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {recentPosts.map((post, i) => (
+              <motion.div
+                key={post.slug}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 1.1 + i * 0.1 }}
               >
-                <Github className="w-4 h-4" />
-                GitHub
-              </a>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <a 
-                href="https://linkedin.com/in/ziangren" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-2"
-              >
-                <Linkedin className="w-4 h-4" />
-                LinkedIn
-              </a>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <a 
-                href="mailto:contact@ziangren.com"
-                className="flex items-center gap-2"
-              >
-                <Mail className="w-4 h-4" />
-                Contact
-              </a>
-            </Button>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group block p-4 -mx-4 rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground/60">
+                    <Clock className="w-3 h-3" />
+                    <time dateTime={post.date}>{formatDate(post.date)}</time>
+                    <span className="text-muted-foreground/30">
+                      &middot;
+                    </span>
+                    <span>{post.readingTime} min read</span>
+                  </div>
+                  <h3 className="font-medium text-foreground/90 group-hover:text-foreground transition-colors leading-snug line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <p className="mt-1.5 text-sm text-muted-foreground/70 line-clamp-2 leading-relaxed">
+                    {post.summary}
+                  </p>
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>
