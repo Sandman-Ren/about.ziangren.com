@@ -125,12 +125,12 @@ export function HeroSection() {
   const recentPosts = getAllBlogPosts().slice(0, 3)
 
   return (
-    <section className="relative min-h-[100dvh] flex flex-col px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="relative min-h-[100dvh] lg:h-[100dvh] lg:max-h-[100dvh] flex flex-col px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/30" />
       {/* Subtle grid pattern */}
       <div
-        className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.035] dark:opacity-[0.04]"
         style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--foreground)) 1px, transparent 0)`,
           backgroundSize: '32px 32px',
@@ -142,17 +142,15 @@ export function HeroSection() {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:gap-16 items-center w-full">
 
           {/* Left column - text content */}
-          <div className="space-y-6 md:space-y-8 order-2 md:order-1 text-center md:text-left">
+          <div className="space-y-6 md:space-y-8 lg:space-y-5 order-2 md:order-1 text-center md:text-left">
             {/* Name */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter">
-                <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/50 bg-clip-text text-transparent">
-                  Ziang Ren
-                </span>
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-foreground">
+                Ziang Ren
               </h1>
             </motion.div>
 
@@ -188,7 +186,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.55 }}
-              className="space-y-3 max-w-lg mx-auto md:mx-0"
+              className="space-y-2 max-w-lg mx-auto md:mx-0"
             >
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
                 Currently
@@ -302,35 +300,35 @@ export function HeroSection() {
       </div>
 
       {/* Below-fold section: Recent writing */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto pb-12 md:pb-16">
+      <div className="relative z-10 w-full max-w-6xl mx-auto pb-8 lg:pb-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1.0 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
         >
           {/* Divider */}
-          <div className="border-t border-border/60 mb-8" />
+          <div className="border-t border-border/60 mb-6 lg:mb-4" />
 
-          <div className="flex items-baseline justify-between mb-6">
+          <div className="flex items-baseline justify-between mb-4 lg:mb-3">
             <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground/60">
               Recent Writing
             </h2>
             <Link
               href="/blog"
-              className="group flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="group flex items-center gap-1.5 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
             >
               All posts
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-3">
             {recentPosts.map((post, i) => (
               <motion.div
                 key={post.slug}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 1.1 + i * 0.1 }}
+                transition={{ duration: 0.3, delay: 0.95 + i * 0.08 }}
               >
                 <Link
                   href={`/blog/${post.slug}`}

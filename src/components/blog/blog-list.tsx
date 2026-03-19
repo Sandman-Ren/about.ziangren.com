@@ -62,24 +62,15 @@ export default function BlogList({
       <div className="flex-shrink-0 px-4 sm:px-6 lg:px-8 pt-8 pb-4 bg-background">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="mb-8">
             <motion.h1
-              className="text-4xl font-bold tracking-tight mb-4"
+              className="text-4xl font-bold tracking-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              Blog Posts
+              Blog
             </motion.h1>
-            <motion.p
-              className="text-xl text-muted-foreground max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              Thoughts on technology, development, and the intersection of code
-              and creativity.
-            </motion.p>
           </div>
 
           {/* Search and Filters */}
@@ -169,7 +160,7 @@ export default function BlogList({
         <div className="max-w-7xl mx-auto">
           {/* Blog Posts Grid */}
           {displayPosts.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
+            <div className="grid gap-6 md:grid-cols-2 mb-12">
               {displayPosts.map((post, index) => {
                 const isFeatured = !!post.featured;
 
@@ -182,34 +173,23 @@ export default function BlogList({
                       duration: 0.5,
                       delay: 0.1 * Math.min(index, 6),
                     }}
-                    className={isFeatured ? "md:col-span-2" : ""}
                   >
                     <Link href={`/blog/${post.slug}`} className="block h-full">
                       <Card
                         className={`h-full card-hover-shadow cursor-pointer ${
                           isFeatured
-                            ? "border-primary/30 bg-primary/[0.02] dark:bg-primary/[0.04]"
+                            ? "border-primary/30"
                             : ""
                         }`}
                       >
                         <CardHeader>
-                          <CardTitle
-                            className={
-                              isFeatured
-                                ? "text-xl leading-tight"
-                                : "text-lg leading-tight"
-                            }
-                          >
+                          <CardTitle className="text-lg leading-tight">
                             {isFeatured && (
                               <Star className="inline-block h-4 w-4 mr-1.5 text-primary fill-primary align-text-top" />
                             )}
                             {post.title}
                           </CardTitle>
-                          <CardDescription
-                            className={
-                              isFeatured ? "line-clamp-3" : "line-clamp-2"
-                            }
-                          >
+                          <CardDescription className="line-clamp-2">
                             {post.summary}
                           </CardDescription>
                         </CardHeader>
