@@ -52,55 +52,29 @@ interface ChatBubbleProps {
   onMouseLeave: () => void
 }
 
-// SVG-based comic/game bubble with integrated notch (Option 2)
-function SvgBubble({ children }: { children: React.ReactNode }) {
-  return (
-  <div className="relative inline-block overflow-visible">
-      {/* Background shape with notch. Scales to content via viewBox. */}
-      <svg
-    className="absolute inset-0 -z-10 w-full h-full overflow-visible filter drop-shadow-bubble"
-        viewBox="0 0 100 44"
-        preserveAspectRatio="none"
-        aria-hidden
-      >
-        <path
-      d="M8 2 H92 Q98 2 98 8 V32 Q98 38 92 38 H20 L8 44 L10 38 H8 Q2 38 2 32 V8 Q2 2 8 2 Z"
-          fill="hsl(var(--background) / 0.95)"
-          stroke="hsl(var(--foreground) / 0.15)"
-          strokeWidth="2"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-
-      {/* Content */}
-    <div className="px-6 py-4 flex items-center justify-start">
-        {children}
-      </div>
-    </div>
-  )
-}
-
 function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.1, y: -10 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.1, y: -10 }}
-      transition={springs.snappy}
-      className="absolute bottom-full left-full -ml-8 -mb-8 z-20 pointer-events-auto"
-      style={{ transformOrigin: "bottom left" }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      <div className="relative mt-2">
-        {/* SVG bubble (option 2) */}
-        <SvgBubble>
-          <p dir="auto" className="pb-1 text-xl sm:text-2xl font-semibold tracking-wide text-foreground leading-relaxed boogaloo-font whitespace-nowrap text-left rtl:text-right relative z-10">
+    // Outer div handles positioning (CSS transforms not affected by Framer Motion)
+    <div className="absolute bottom-full left-[45%] -translate-x-1/2 md:left-auto md:translate-x-0 md:right-1/2 lg:right-3/4 mb-3 z-20 pointer-events-auto">
+      {/* Inner motion.div handles animation only */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.3, y: -10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.3, y: -10 }}
+        transition={springs.snappy}
+        className="bubble-origin"
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        <div className="relative rounded-xl bg-background/95 backdrop-blur-md border-2 border-foreground/15 bubble-shadow px-6 py-3.5 w-max max-w-80 sm:max-w-96">
+          <p dir="auto" className="text-xl font-semibold tracking-wide text-foreground leading-relaxed boogaloo-font">
             {quote}
           </p>
-        </SvgBubble>
-      </div>
-    </motion.div>
+          {/* Notch — rotated square with matching surface, responsive position */}
+          <div className="absolute -bottom-[7px] left-[55%] -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 w-3.5 h-3.5 rotate-45 bg-background/95 border-r-2 border-b-2 border-foreground/15" />
+        </div>
+      </motion.div>
+    </div>
   )
 }
 
@@ -125,7 +99,7 @@ export function HeroSection() {
   const recentPosts = getAllBlogPosts().slice(0, 3)
 
   return (
-    <section className="relative min-h-[100dvh] lg:min-h-0 lg:h-full flex flex-col px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="relative min-h-[100dvh] lg:min-h-0 lg:h-full flex flex-col px-4 sm:px-6 lg:px-8">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/30" />
       {/* Subtle grid pattern */}

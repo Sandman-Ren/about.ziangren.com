@@ -168,15 +168,21 @@
 }
 
 @layer utilities {
-  /* Theme-aware drop shadow for chat bubble */
-  .drop-shadow-bubble {
-    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+  /* Responsive transform-origin for chat bubble animation */
+  .bubble-origin {
+    transform-origin: bottom center;
   }
-  
-  .dark .drop-shadow-bubble {
-    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5)) drop-shadow(0 4px 8px rgba(255, 255, 255, 0.05));
+  @media (min-width: 768px) {
+    .bubble-origin {
+      transform-origin: bottom right;
+    }
   }
-  
+
+  /* Comic-style hard offset shadow for chat bubble */
+  .bubble-shadow {
+    box-shadow: 3px 3px 0 hsl(var(--foreground) / 0.08);
+  }
+
   /* Theme-aware card hover shadow - provides visible shadows in both light and dark modes */
   .card-hover-shadow {
     transition: box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;

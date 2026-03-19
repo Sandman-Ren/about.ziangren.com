@@ -78,9 +78,9 @@ export const fadeInScale: Variants = {
  * Used for: Chat bubbles, tooltips, notifications
  */
 export const bubblePopIn: Variants = {
-  initial: { opacity: 0, scale: 0.1, y: -10 },
+  initial: { opacity: 0, scale: 0.3, y: -10 },
   animate: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.1, y: -10 },
+  exit: { opacity: 0, scale: 0.3, y: -10 },
 }
 
 /**
