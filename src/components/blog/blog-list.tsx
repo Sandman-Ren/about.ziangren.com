@@ -176,10 +176,10 @@ export default function BlogList({
                   >
                     <Link href={`/blog/${post.slug}`} className="block h-full">
                       <Card
-                        className={`h-full card-hover-shadow cursor-pointer ${
+                        className={`h-full cursor-pointer ${
                           isFeatured
-                            ? "border-amber-400/30 dark:border-amber-500/20"
-                            : ""
+                            ? "card-hover-shadow-featured"
+                            : "card-hover-shadow"
                         }`}
                       >
                         <CardHeader>
