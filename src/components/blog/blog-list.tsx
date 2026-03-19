@@ -78,7 +78,7 @@ export default function BlogList({
             className="mb-6 space-y-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.4 }}
           >
             {/* Search row: input + featured toggle + clear */}
             <div className="flex gap-2 items-center">
@@ -102,7 +102,7 @@ export default function BlogList({
                 aria-pressed={showOnlyFeatured}
                 aria-label="Show featured posts only"
               >
-                <Star className={`h-4 w-4 ${showOnlyFeatured ? "fill-current" : ""}`} />
+                <Star className={`h-4 w-4 ${showOnlyFeatured ? "fill-current" : "text-amber-500 dark:text-amber-400"}`} />
                 <span className="hidden sm:inline">Featured</span>
               </Button>
               {hasActiveFilters && (
@@ -178,16 +178,20 @@ export default function BlogList({
                       <Card
                         className={`h-full card-hover-shadow cursor-pointer ${
                           isFeatured
-                            ? "border-primary/30"
+                            ? "border-amber-400/30 dark:border-amber-500/20"
                             : ""
                         }`}
                       >
                         <CardHeader>
                           <CardTitle className="text-lg leading-tight">
-                            {isFeatured && (
-                              <Star className="inline-block h-4 w-4 mr-1.5 text-primary fill-primary align-text-top" />
+                            {isFeatured ? (
+                              <div className="flex items-start gap-2">
+                                <Star className="h-4 w-4 mt-[3px] shrink-0 text-amber-500 fill-amber-500 dark:text-amber-400 dark:fill-amber-400" />
+                                <span>{post.title}</span>
+                              </div>
+                            ) : (
+                              post.title
                             )}
-                            {post.title}
                           </CardTitle>
                           <CardDescription className="line-clamp-2">
                             {post.summary}

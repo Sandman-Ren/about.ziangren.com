@@ -9,10 +9,10 @@ export default function NotFound() {
       <div className="max-w-2xl mx-auto text-center space-y-8">
         {/* 404 Header */}
         <div className="space-y-4">
-          <div className="text-8xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+          <div className="text-8xl font-bold tracking-tight text-primary">
             404
           </div>
-          <p className="text-xl font-medium bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+          <p className="text-xl font-medium text-primary/70">
             Page Not Found
           </p>
         </div>

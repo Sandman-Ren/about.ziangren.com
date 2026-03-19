@@ -141,77 +141,54 @@ export function HeroSection() {
       <div className="relative z-10 flex-1 flex items-center w-full max-w-6xl mx-auto py-12 md:py-0">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:gap-16 items-center w-full">
 
-          {/* Left column - text content */}
-          <div className="space-y-6 md:space-y-8 lg:space-y-5 order-2 md:order-1 text-center md:text-left">
+          {/* Left column - text content: single animation group */}
+          <motion.div
+            className="space-y-6 md:space-y-8 lg:space-y-5 order-2 md:order-1 text-center md:text-left"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
             {/* Name */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-foreground">
-                Ziang Ren
-              </h1>
-            </motion.div>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-foreground">
+              Ziang Ren
+            </h1>
 
             {/* Subtitle */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.25 }}
-            >
-              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
-                Software engineer who builds things for the web,
-                <br className="hidden sm:block" />
-                then writes about what broke along the way.
-              </p>
-            </motion.div>
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
+              Software engineer who builds things for the web,
+              <br className="hidden sm:block" />
+              then writes about what broke along the way.
+            </p>
 
             {/* Bio */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="max-w-lg mx-auto md:mx-0"
-            >
+            <div className="max-w-lg mx-auto md:mx-0">
               <p className="text-base text-muted-foreground/80 leading-relaxed">
                 Based in Toronto. I spend my days writing code and my nights tinkering with
                 self-hosted infrastructure, playing Blizzard games, and convincing myself that
                 one more Traefik config change will finally fix everything.
               </p>
-            </motion.div>
+            </div>
 
             {/* Currently up to */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.55 }}
-              className="space-y-2 max-w-lg mx-auto md:mx-0"
-            >
+            <div className="space-y-2 max-w-lg mx-auto md:mx-0">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
                 Currently
               </p>
               <div className="space-y-2">
                 {CURRENTLY_ITEMS.map((item, i) => (
-                  <motion.div
+                  <div
                     key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 0.65 + i * 0.1 }}
                     className="flex items-center gap-3 text-sm text-muted-foreground justify-center md:justify-start"
                   >
                     <item.icon className="w-4 h-4 shrink-0 text-foreground/40" />
                     <span>{item.text}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Social links and location */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.85 }}
+            <div
               className="flex flex-col sm:flex-row items-center gap-4 pt-2 justify-center md:justify-start"
             >
               <div className="flex items-center gap-1 text-muted-foreground">
@@ -252,8 +229,8 @@ export function HeroSection() {
                   </a>
                 </Button>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
 
           {/* Right column - avatar */}
           <motion.div
@@ -304,7 +281,7 @@ export function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.9 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
         >
           {/* Divider */}
           <div className="border-t border-border/60 mb-6 lg:mb-4" />
@@ -323,13 +300,8 @@ export function HeroSection() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-3">
-            {recentPosts.map((post, i) => (
-              <motion.div
-                key={post.slug}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.95 + i * 0.08 }}
-              >
+            {recentPosts.map((post) => (
+              <div key={post.slug}>
                 <Link
                   href={`/blog/${post.slug}`}
                   className="group block p-4 -mx-4 rounded-lg hover:bg-muted/50 transition-colors"
@@ -349,7 +321,7 @@ export function HeroSection() {
                     {post.summary}
                   </p>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         </motion.div>

@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { generateGitHubIssueUrl } from '@/lib/urls'
 import { formatDate } from '@/lib/formatting'
-import { slideInLeft, fade } from '@/lib/animations'
+import { fade } from '@/lib/animations'
 import { ANIMATION } from '@/lib/constants'
 import Image from 'next/image'
 
@@ -46,28 +46,23 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Back to Blog Link */}
+        {/* Back to Blog Link + Article Header: single animation group */}
         <motion.div
-          className="mb-8"
-          initial="initial"
-          animate="animate"
-          variants={slideInLeft}
-          transition={{ duration: ANIMATION.DURATION.DEFAULT }}
-        >
-          <Link href="/blog">
-            <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Blog
-            </Button>
-          </Link>
-        </motion.div>
-
-        {/* Article Header */}
-        <motion.header
-          className="mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="mb-8">
+            <Link href="/blog">
+              <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Blog
+              </Button>
+            </Link>
+          </div>
+
+        <header
+          className="mb-10"
         >
           {/* Featured Badge */}
           {post.featured && (
@@ -136,35 +131,34 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
           )}
 
           <Separator className="mt-8" />
-        </motion.header>
-
-        {/* Article Content - Optimized prose container */}
-        <motion.div
-          className="prose prose-lg max-w-none dark:prose-invert
-            prose-headings:font-semibold prose-headings:tracking-tight
-            prose-p:text-foreground/90 prose-p:leading-relaxed
-            prose-a:text-primary prose-a:decoration-primary/30 prose-a:underline-offset-4 hover:prose-a:decoration-primary
-            prose-strong:text-foreground prose-strong:font-semibold
-            prose-blockquote:border-primary/50 prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:not-italic
-            prose-pre:bg-muted/50 prose-pre:border prose-pre:border-border
-            prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:font-medium
-            prose-code:before:content-none prose-code:after:content-none
-            prose-img:rounded-lg prose-img:border prose-img:border-border
-            prose-hr:border-border"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          {children}
+        </header>
         </motion.div>
 
-        {/* Footer */}
-        <motion.footer
-          className="mt-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+        {/* Article Content + Footer: single animation group */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
         >
+          <div
+            className="prose prose-lg max-w-none dark:prose-invert
+              prose-headings:font-semibold prose-headings:tracking-tight
+              prose-p:text-foreground/90 prose-p:leading-relaxed
+              prose-a:text-primary prose-a:decoration-primary/30 prose-a:underline-offset-4 hover:prose-a:decoration-primary
+              prose-strong:text-foreground prose-strong:font-semibold
+              prose-blockquote:border-primary/50 prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:not-italic
+              prose-pre:bg-muted/50 prose-pre:border prose-pre:border-border
+              prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:font-medium
+              prose-code:before:content-none prose-code:after:content-none
+              prose-img:rounded-lg prose-img:border prose-img:border-border
+              prose-hr:border-border"
+          >
+            {children}
+          </div>
+
+          <footer
+            className="mt-16"
+          >
           <Separator className="mb-8" />
           
           {/* Call to Action */}
@@ -195,7 +189,8 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
           <div className="sr-only">
             Keywords: {post.keywords.join(', ')}
           </div>
-        </motion.footer>
+        </footer>
+        </motion.div>
         </div>
       </div>
     </article>
