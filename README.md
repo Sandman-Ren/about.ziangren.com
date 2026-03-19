@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# about.ziangren.com
 
-## Getting Started
+Personal website and blog for Ziang Ren, built with Next.js 15 and deployed to GitHub Pages.
 
-First, run the development server:
+**Live site:** [about.ziangren.com](https://about.ziangren.com)
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router, static export)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Content:** MDX with remark/rehype plugins
+- **Animations:** Framer Motion
+- **Testing:** Playwright (E2E)
+- **Deployment:** GitHub Pages via GitHub Actions
+
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # Start dev server on localhost:3000
+npm run build      # Production build (static export to /out)
+npm run lint       # ESLint
+npm test           # Playwright E2E tests
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Blog
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Blog posts are MDX files managed through a two-part system:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Content files** in `content/` (source markdown)
+2. **Registry** at `public/blog-registry.json` (metadata)
 
-## Learn More
+To create a new post:
+```bash
+npm run new-note
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/            # Next.js App Router pages
+├── components/     # UI, layout, blog, and about components
+├── hooks/          # Custom React hooks
+├── lib/            # Utilities, blog data access, animations
+└── types/          # TypeScript type definitions
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [CLAUDE.md](CLAUDE.md) for detailed architecture documentation.

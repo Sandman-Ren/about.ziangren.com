@@ -21,6 +21,7 @@ const boogaloo = Boogaloo({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://about.ziangren.com"),
   title: "Ziang Ren - Personal Website",
   description:
     "Personal website of Ziang Ren - Software Engineer, Blogger, and Tech Enthusiast",
