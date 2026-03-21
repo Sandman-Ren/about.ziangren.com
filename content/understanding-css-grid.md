@@ -1,0 +1,133 @@
+---
+title: Understanding CSS Grid Layout
+summary: "A practical guide to CSS Grid — the most powerful layout system in CSS. Learn the core concepts, common patterns, and when to choose Grid over Flexbox."
+date: 2025-11-10
+tags:
+  - css
+  - web-development
+  - frontend
+keywords:
+  - CSS Grid
+  - grid layout
+  - responsive design
+  - CSS layout
+  - web development
+published: true
+featured: false
+aiAssisted: true
+author: Ziang Ren
+collection: modern-web-fundamentals
+---
+
+# Understanding CSS Grid Layout
+
+CSS Grid is the most powerful layout system available in CSS. Unlike Flexbox, which is one-dimensional, Grid gives you control over both rows and columns simultaneously. Once you understand the mental model, it becomes the go-to tool for page-level layouts.
+
+## The Mental Model
+
+Think of Grid as defining a two-dimensional coordinate system on a container. You place children into cells of that grid — either explicitly or by letting the browser auto-place them.
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 1rem;
+}
+```
+
+This creates a 3-column, 3-row grid where the middle column is twice as wide as the sides.
+
+## Key Concepts
+
+### `fr` Units
+
+The `fr` unit represents a fraction of the available space. `1fr 2fr` means "divide space into 3 parts; first column gets 1, second gets 2."
+
+### `grid-template-areas`
+
+Named areas make complex layouts readable:
+
+```css
+.layout {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "sidebar main aside"
+    "footer footer footer";
+  grid-template-columns: 200px 1fr 200px;
+}
+
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main { grid-area: main; }
+```
+
+### `auto-fit` and `auto-fill`
+
+These enable responsive grids without media queries:
+
+```css
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+```
+
+Cards automatically wrap to new rows as the viewport shrinks. No breakpoints needed.
+
+## Grid vs Flexbox
+
+They're complementary, not competing:
+
+| Use Case | Grid | Flexbox |
+|----------|------|---------|
+| Page layout | Yes | No |
+| Card grids | Yes | Maybe |
+| Navigation bar | No | Yes |
+| Centering one item | Either | Yes |
+| Two-dimensional alignment | Yes | No |
+
+**Rule of thumb**: if you're laying out items in a line, use Flexbox. If you need rows and columns, use Grid.
+
+## Common Patterns
+
+### The Holy Grail Layout
+
+```css
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+```
+
+Header, stretchy content, footer — in three lines of CSS.
+
+### Responsive Card Grid
+
+```css
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+```
+
+### Sidebar Layout
+
+```css
+.app {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+}
+```
+
+## Browser Support
+
+CSS Grid has been supported in all major browsers since 2017. There's no reason not to use it today.
+
+## Further Reading
+
+The best way to learn Grid is to experiment. CSS Grid Garden is a fun interactive tutorial, and MDN's Grid documentation is the definitive reference.

@@ -1,6 +1,6 @@
 'use client'
 
-import { BlogPost } from '@/types/blog'
+import { BlogPost, CollectionContext } from '@/types/blog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -12,13 +12,15 @@ import { formatDate } from '@/lib/formatting'
 import { fade } from '@/lib/animations'
 import { ANIMATION } from '@/lib/constants'
 import Image from 'next/image'
+import CollectionNav from '@/components/blog/collection-nav'
 
 interface BlogPostPageProps {
   post: BlogPost
+  collectionContext?: CollectionContext | null
   children?: React.ReactNode
 }
 
-export default function BlogPostPage({ post, children }: BlogPostPageProps) {
+export default function BlogPostPage({ post, collectionContext, children }: BlogPostPageProps) {
   const issueUrl = generateGitHubIssueUrl(post)
 
   return (
@@ -51,13 +53,24 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="mb-8">
+          <div className="mb-8 flex items-center gap-4">
             <Link href="/blog">
               <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Blog
               </Button>
             </Link>
+            {collectionContext && (
+              <>
+                <span className="text-border">•</span>
+                <Link href={`/blog/collections/${collectionContext.collection.slug}`}>
+                  <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    {collectionContext.collection.title}
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
         <header
@@ -149,7 +162,23 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
             className="mt-16"
           >
           <Separator className="mb-8" />
-          
+
+          {/* Collection Navigation */}
+          {collectionContext && (
+            <div className="mb-8">
+              <CollectionNav
+                collectionTitle={collectionContext.collection.title}
+                collectionSlug={collectionContext.collection.slug}
+                currentIndex={collectionContext.currentIndex}
+                totalEpisodes={collectionContext.totalEpisodes}
+                previousPost={collectionContext.previousPost}
+                nextPost={collectionContext.nextPost}
+                siblingPosts={collectionContext.siblingPosts}
+                ordered={collectionContext.collection.ordered}
+              />
+            </div>
+          )}
+
           {/* Call to Action */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-muted/50 rounded-lg">
             <div>

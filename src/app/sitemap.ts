@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { getAllBlogPosts } from '@/lib/blog/registry'
+import { getAllCollections } from '@/lib/blog/collections'
 
 export const dynamic = 'force-static'
 
@@ -13,6 +14,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: post.lastModified || post.date,
     changeFrequency: 'monthly',
     priority: 0.7,
+  }))
+
+  const collections = getAllCollections()
+  const collectionEntries: MetadataRoute.Sitemap = collections.map((collection) => ({
+    url: `${SITE_URL}/blog/collections/${collection.slug}`,
+    lastModified: new Date().toISOString().split('T')[0],
+    changeFrequency: 'monthly',
+    priority: 0.6,
   }))
 
   return [
@@ -34,6 +43,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
+    {
+      url: `${SITE_URL}/blog/collections`,
+      lastModified: new Date().toISOString().split('T')[0],
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
     ...blogEntries,
+    ...collectionEntries,
   ]
 }

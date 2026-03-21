@@ -1,0 +1,25 @@
+{
+  "collections": [
+    {
+      "slug": "homelab-journey",
+      "title": "Homelab Journey",
+      "description": "Building and maintaining a self-hosted home server from scratch — from choosing hardware to deploying services",
+      "ordered": true,
+      "postSlugs": [
+        "homelab-choosing-hardware",
+        "homelab-installing-proxmox",
+        "homelab-docker-compose-setup"
+      ]
+    },
+    {
+      "slug": "modern-web-fundamentals",
+      "title": "Modern Web Fundamentals",
+      "description": "Core concepts and best practices for modern web development",
+      "ordered": false,
+      "postSlugs": [
+        "typescript-generics-guide",
+        "understanding-css-grid"
+      ]
+    }
+  ]
+}

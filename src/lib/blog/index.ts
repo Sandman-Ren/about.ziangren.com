@@ -6,3 +6,4 @@
 
 export * from './registry'
 export * from './filters'
+export * from './collections'

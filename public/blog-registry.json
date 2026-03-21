@@ -27,7 +27,9 @@
       "featured": false,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 5
+      "readingTime": 5,
+      "collection": null,
+      "episode": null
     },
     {
       "slug": "oauth2-keycloak-traefik-setup",
@@ -56,7 +58,9 @@
       "featured": false,
       "aiAssisted": false,
       "author": "Ziang Ren",
-      "readingTime": 6
+      "readingTime": 6,
+      "collection": null,
+      "episode": null
     },
     {
       "slug": "typography-showcase",
@@ -79,7 +83,136 @@
       "featured": false,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 7
+      "readingTime": 7,
+      "collection": null,
+      "episode": null
+    },
+    {
+      "slug": "typescript-generics-guide",
+      "title": "TypeScript Generics: A Practical Guide",
+      "summary": "Generics are one of TypeScript's most powerful features. This guide covers the core patterns you'll use every day — from simple type parameters to conditional types.",
+      "date": "2025-11-20",
+      "tags": [
+        "typescript",
+        "web-development",
+        "frontend"
+      ],
+      "keywords": [
+        "TypeScript generics",
+        "type parameters",
+        "generic functions",
+        "generic types",
+        "TypeScript"
+      ],
+      "published": true,
+      "featured": false,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 3,
+      "collection": "modern-web-fundamentals",
+      "episode": null
+    },
+    {
+      "slug": "understanding-css-grid",
+      "title": "Understanding CSS Grid Layout",
+      "summary": "A practical guide to CSS Grid — the most powerful layout system in CSS. Learn the core concepts, common patterns, and when to choose Grid over Flexbox.",
+      "date": "2025-11-10",
+      "tags": [
+        "css",
+        "web-development",
+        "frontend"
+      ],
+      "keywords": [
+        "CSS Grid",
+        "grid layout",
+        "responsive design",
+        "CSS layout",
+        "web development"
+      ],
+      "published": true,
+      "featured": false,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 3,
+      "collection": "modern-web-fundamentals",
+      "episode": null
+    },
+    {
+      "slug": "homelab-docker-compose-setup",
+      "title": "Homelab Journey: Docker Compose for Everything",
+      "summary": "Docker Compose is the backbone of my homelab. Here's how I structure my deployments, manage configurations, and keep services running smoothly.",
+      "date": "2025-11-01",
+      "tags": [
+        "homelab",
+        "Docker",
+        "self-hosting",
+        "devops"
+      ],
+      "keywords": [
+        "Docker Compose",
+        "homelab deployment",
+        "container management",
+        "self-hosting",
+        "Docker networking"
+      ],
+      "published": true,
+      "featured": false,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 2,
+      "collection": "homelab-journey",
+      "episode": 3
+    },
+    {
+      "slug": "homelab-installing-proxmox",
+      "title": "Homelab Journey: Installing and Configuring the OS",
+      "summary": "With hardware ready, it's time to install the operating system. I walk through my Ubuntu Server setup, initial configuration, and security hardening.",
+      "date": "2025-10-15",
+      "tags": [
+        "homelab",
+        "linux",
+        "ubuntu",
+        "self-hosting"
+      ],
+      "keywords": [
+        "Ubuntu Server",
+        "homelab OS",
+        "server setup",
+        "SSH hardening",
+        "self-hosting"
+      ],
+      "published": true,
+      "featured": false,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 2,
+      "collection": "homelab-journey",
+      "episode": 2
+    },
+    {
+      "slug": "homelab-choosing-hardware",
+      "title": "Homelab Journey: Choosing the Right Hardware",
+      "summary": "The first step in building a homelab is picking the right hardware. Here's how I chose my server components and what I'd do differently.",
+      "date": "2025-10-01",
+      "tags": [
+        "homelab",
+        "hardware",
+        "self-hosting"
+      ],
+      "keywords": [
+        "homelab hardware",
+        "server build",
+        "self-hosting",
+        "mini PC",
+        "home server"
+      ],
+      "published": true,
+      "featured": false,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 2,
+      "collection": "homelab-journey",
+      "episode": 1
     },
     {
       "slug": "building-my-own-server",
@@ -107,7 +240,9 @@
       "featured": true,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 1
+      "readingTime": 1,
+      "collection": null,
+      "episode": null
     },
     {
       "slug": "welcome-to-my-new-blog",
@@ -132,7 +267,9 @@
       "featured": true,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 2
+      "readingTime": 2,
+      "collection": null,
+      "episode": null
     },
     {
       "slug": "building-modern-react-typescript",
@@ -157,7 +294,9 @@
       "featured": false,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 2
+      "readingTime": 2,
+      "collection": null,
+      "episode": null
     },
     {
       "slug": "my-cs-journey",
@@ -182,7 +321,9 @@
       "featured": true,
       "aiAssisted": true,
       "author": "Ziang Ren",
-      "readingTime": 3
+      "readingTime": 3,
+      "collection": null,
+      "episode": null
     }
   ]
 }

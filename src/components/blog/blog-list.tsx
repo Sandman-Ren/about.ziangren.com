@@ -17,8 +17,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Calendar, Clock, Search, Star, X } from "lucide-react";
-import { BlogPost, SearchFilters } from "@/types/blog";
+import { ArrowRight, Calendar, Clock, Library, Search, Star, X } from "lucide-react";
+import { BlogPost, Collection, SearchFilters } from "@/types/blog";
 import { motion } from "framer-motion";
 import { formatDate } from "@/lib/formatting";
 import { useBlogFilters } from "@/hooks/useBlogFilters";
@@ -26,11 +26,13 @@ import { POSTS_PER_PAGE, UI } from "@/lib/constants";
 
 interface BlogListProps {
   posts: BlogPost[];
+  collections?: Array<Collection & { postCount: number }>;
   initialFilters?: Partial<SearchFilters>;
 }
 
 export default function BlogList({
   posts,
+  collections = [],
   initialFilters = {},
 }: BlogListProps) {
   // Use the custom hook for all filtering, search, and pagination logic
@@ -63,14 +65,22 @@ export default function BlogList({
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <motion.h1
-              className="text-4xl font-bold tracking-tight"
+            <motion.div
+              className="flex items-center justify-between"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              Blog
-            </motion.h1>
+              <h1 className="text-4xl font-bold tracking-tight">
+                Blog
+              </h1>
+              <Link href="/blog/collections">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Library className="h-4 w-4" />
+                  <span className="hidden sm:inline">Collections</span>
+                </Button>
+              </Link>
+            </motion.div>
           </div>
 
           {/* Search and Filters */}
@@ -155,6 +165,61 @@ export default function BlogList({
         </div>
       </div>
 
+      {/* Collections Section — hidden when filters are active */}
+      {collections.length > 0 && !hasActiveFilters && (
+        <div className="px-4 sm:px-6 lg:px-8 pb-6">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Library className="h-4 w-4 text-muted-foreground" />
+                  <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                    Collections
+                  </h2>
+                </div>
+                <Link href="/blog/collections" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                  View all
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {collections.map((collection) => (
+                  <Link
+                    key={collection.slug}
+                    href={`/blog/collections/${collection.slug}`}
+                    className="block"
+                  >
+                    <Card className="cursor-pointer card-hover-shadow">
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <h3 className="font-medium text-sm leading-tight mb-1 truncate">
+                              {collection.title}
+                            </h3>
+                            <p className="text-xs text-muted-foreground line-clamp-1">
+                              {collection.description}
+                            </p>
+                          </div>
+                          <Badge variant="secondary" className="text-xs shrink-0 py-0">
+                            {collection.ordered
+                              ? `${collection.postCount} parts`
+                              : `${collection.postCount} posts`}
+                          </Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      )}
+
       {/* Content Area */}
       <div className="px-4 sm:px-6 lg:px-8 pb-8">
         <div className="max-w-7xl mx-auto">
@@ -183,15 +248,21 @@ export default function BlogList({
                         }`}
                       >
                         <CardHeader>
+                          {(isFeatured || post.collection) && (
+                            <div className="flex items-center gap-1.5 mb-1">
+                              {isFeatured && (
+                                <Star className="h-4 w-4 shrink-0 text-amber-500 fill-amber-500 dark:text-amber-400 dark:fill-amber-400" />
+                              )}
+                              {post.collection && (
+                                <Badge variant="secondary" className="text-xs gap-1 py-0">
+                                  <Library className="h-3 w-3" />
+                                  Series
+                                </Badge>
+                              )}
+                            </div>
+                          )}
                           <CardTitle className="text-lg leading-tight">
-                            {isFeatured ? (
-                              <div className="flex items-start gap-2">
-                                <Star className="h-4 w-4 mt-[3px] shrink-0 text-amber-500 fill-amber-500 dark:text-amber-400 dark:fill-amber-400" />
-                                <span>{post.title}</span>
-                              </div>
-                            ) : (
-                              post.title
-                            )}
+                            {post.title}
                           </CardTitle>
                           <CardDescription className="line-clamp-2">
                             {post.summary}

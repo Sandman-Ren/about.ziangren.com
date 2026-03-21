@@ -2,9 +2,14 @@
 export const slugs = [
   "building-modern-react-typescript",
   "building-my-own-server",
+  "homelab-choosing-hardware",
+  "homelab-docker-compose-setup",
+  "homelab-installing-proxmox",
   "my-cs-journey",
   "oauth2-keycloak-traefik-setup",
+  "typescript-generics-guide",
   "typography-showcase",
+  "understanding-css-grid",
   "uptime-kuma-setup",
   "welcome-to-my-new-blog"
 ] as const

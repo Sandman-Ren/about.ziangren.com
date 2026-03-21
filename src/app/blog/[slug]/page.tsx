@@ -1,4 +1,5 @@
 import { getBlogPost } from '@/lib/blog/registry'
+import { getCollectionForPost } from '@/lib/blog/collections'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import BlogPostPage from '@/components/blog/blog-post-page'
@@ -64,8 +65,10 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
   // Dynamic import - MDX file exists after import-notes runs
   const { default: Content } = await import(`@/content/blog/${slug}.mdx`)
 
+  const collectionContext = getCollectionForPost(slug)
+
   return (
-    <BlogPostPage post={post}>
+    <BlogPostPage post={post} collectionContext={collectionContext}>
       <Content />
     </BlogPostPage>
   )

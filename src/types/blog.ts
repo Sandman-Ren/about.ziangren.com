@@ -15,6 +15,31 @@ export interface BlogPost {
   aiAssisted?: boolean
   author?: string
   coverImage?: string
+  collection?: string | null
+  episode?: number | null
+}
+
+/**
+ * Collection metadata from collections-registry.json
+ */
+export interface Collection {
+  slug: string
+  title: string
+  description: string
+  ordered: boolean
+  postSlugs: string[]
+}
+
+/**
+ * Context for a post's position within a collection
+ */
+export interface CollectionContext {
+  collection: Collection
+  currentIndex: number
+  totalEpisodes: number
+  previousPost: BlogPost | null
+  nextPost: BlogPost | null
+  siblingPosts: BlogPost[]
 }
 
 /**

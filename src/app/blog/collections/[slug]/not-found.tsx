@@ -1,0 +1,34 @@
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Home, ArrowLeft } from 'lucide-react'
+
+export default function NotFound() {
+  return (
+    <div className="min-h-[calc(100vh-theme(spacing.14)-theme(spacing.24))] bg-background flex items-center justify-center px-4">
+      <div className="text-center space-y-6 max-w-md">
+        <div className="space-y-2">
+          <h1 className="text-5xl font-bold tracking-tight">404</h1>
+          <h2 className="text-xl font-semibold">Collection Not Found</h2>
+          <p className="text-muted-foreground text-sm">
+            The collection you&apos;re looking for doesn&apos;t exist or may have been removed.
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button asChild>
+            <Link href="/blog/collections">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Collections
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/">
+              <Home className="h-4 w-4 mr-2" />
+              Go Home
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
