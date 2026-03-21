@@ -8,7 +8,7 @@
 // ============================================================================
 
 /** Number of blog posts to display per page */
-export const POSTS_PER_PAGE = 4
+export const POSTS_PER_PAGE = 6
 
 // ============================================================================
 // Easter Egg Configuration (HeroSection avatar interaction)

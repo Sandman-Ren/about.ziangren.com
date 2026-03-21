@@ -65,9 +65,9 @@ export default function BlogList({
   const showTags = tagsExpanded || selectedTags.length > 0;
 
   return (
-    <div>
-      {/* Header Section */}
-      <div className="px-4 sm:px-6 lg:px-8 pt-8 pb-4">
+    <div className="h-full flex flex-col">
+      {/* Header Section — fixed */}
+      <div className="shrink-0 px-4 sm:px-6 lg:px-8 pt-8 pb-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-6">
@@ -192,9 +192,9 @@ export default function BlogList({
         </div>
       </div>
 
-      {/* Collections Section — hidden when filters are active */}
+      {/* Collections Section — fixed, hidden when filters are active */}
       {collections.length > 0 && !hasActiveFilters && (
-        <div className="px-4 sm:px-6 lg:px-8 pb-6">
+        <div className="shrink-0 px-4 sm:px-6 lg:px-8 pb-6">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -252,12 +252,12 @@ export default function BlogList({
         </div>
       )}
 
-      {/* Content Area */}
-      <div className="px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Posts Section Header — only when collections are shown above */}
+      {/* Content Area — fills remaining height */}
+      <div className="flex-1 min-h-0 flex flex-col px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto w-full flex-1 min-h-0 flex flex-col">
+          {/* Posts Section Header */}
           {collections.length > 0 && !hasActiveFilters && (
-            <div className="flex items-center gap-3 mb-4">
+            <div className="shrink-0 flex items-center gap-3 mb-4">
               <h2 className="text-sm font-medium text-muted-foreground whitespace-nowrap">
                 Posts
               </h2>
@@ -265,9 +265,10 @@ export default function BlogList({
             </div>
           )}
 
-          {/* Blog Posts Grid */}
+          {/* Scrollable Posts Grid */}
           {displayPosts.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 mb-8">
+            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">
+              <div className="grid gap-6 md:grid-cols-2 pb-4">
               {displayPosts.map((post, index) => {
                 const isFeatured = !!post.featured;
 
@@ -386,27 +387,30 @@ export default function BlogList({
                   </motion.div>
                 );
               })}
+              </div>
             </div>
           ) : (
-            <motion.div
-              className="text-center py-12"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <p className="text-lg text-muted-foreground mb-4">
-                No posts found matching your criteria.
-              </p>
-              <Button onClick={clearFilters} variant="outline">
-                Clear filters and show all posts
-              </Button>
-            </motion.div>
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+              <motion.div
+                className="text-center py-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <p className="text-lg text-muted-foreground mb-4">
+                  No posts found matching your criteria.
+                </p>
+                <Button onClick={clearFilters} variant="outline">
+                  Clear filters and show all posts
+                </Button>
+              </motion.div>
+            </div>
           )}
 
-          {/* Pagination */}
+          {/* Pagination — pinned below scrollable area */}
           {!skipPagination && totalPages > 1 && (
             <motion.div
-              className="flex justify-center items-center space-x-2 pb-4"
+              className="shrink-0 flex justify-center items-center space-x-2 py-4 border-t border-border/40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}

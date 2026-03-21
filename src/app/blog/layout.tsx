@@ -20,7 +20,7 @@ interface BlogLayoutProps {
 
 export default function BlogLayout({ children }: BlogLayoutProps) {
   return (
-    <div className="flex flex-col bg-background">
+    <div className="flex flex-col h-full bg-background">
       {children}
     </div>
   )
