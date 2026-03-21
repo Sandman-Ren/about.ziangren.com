@@ -8,9 +8,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Code block background is handled by <pre>, so hljs background should be transparent */
+.hljs {
+  background: transparent;
+}
+
 /* Dark mode syntax highlighting overrides */
 .dark .hljs {
-  background: hsl(var(--muted));
+  background: transparent;
   color: #c9d1d9;
 }
 .dark .hljs-doctag,
@@ -170,7 +175,7 @@
 @layer utilities {
   /* Responsive transform-origin for chat bubble animation */
   .bubble-origin {
-    transform-origin: bottom center;
+    transform-origin: top center;
   }
   @media (min-width: 768px) {
     .bubble-origin {
@@ -224,4 +229,28 @@
       0 0 12px -3px rgba(245, 190, 60, 0.08);
     border-color: rgba(245, 190, 60, 0.2);
   }
+
+  /* Hide scrollbar for horizontal scroll containers */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Touch devices: show card borders by default since hover isn't available */
+@media (pointer: coarse) {
+  .card-hover-shadow,
+  .card-hover-shadow-featured {
+    border-color: hsl(var(--border) / 0.5);
+  }
+}
+
+/* Responsive table overflow for prose content */
+.prose :where(table) {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }

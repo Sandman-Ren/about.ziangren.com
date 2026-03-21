@@ -57,9 +57,9 @@ export default function BlogList({
   const displayPosts = skipPagination ? filteredPosts : paginatedPosts;
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Fixed Header Section */}
-      <div className="flex-shrink-0 px-4 sm:px-6 lg:px-8 pt-8 pb-4 bg-background">
+    <div>
+      {/* Header Section */}
+      <div className="px-4 sm:px-6 lg:px-8 pt-8 pb-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
@@ -95,14 +95,14 @@ export default function BlogList({
                 />
               </div>
               <Button
-                variant={showOnlyFeatured ? "default" : "outline"}
+                variant="outline"
                 size="sm"
                 onClick={() => setShowOnlyFeatured(!showOnlyFeatured)}
-                className="shrink-0 h-10 gap-1.5"
+                className={`shrink-0 h-10 gap-1.5 ${showOnlyFeatured ? "border-amber-500/50 bg-amber-500/10 text-amber-700 hover:bg-amber-500/20 dark:border-amber-400/50 dark:bg-amber-400/10 dark:text-amber-300 dark:hover:bg-amber-400/20" : ""}`}
                 aria-pressed={showOnlyFeatured}
                 aria-label="Show featured posts only"
               >
-                <Star className={`h-4 w-4 ${showOnlyFeatured ? "fill-current" : "text-amber-500 dark:text-amber-400"}`} />
+                <Star className={`h-4 w-4 ${showOnlyFeatured ? "fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" : "text-amber-500 dark:text-amber-400"}`} />
                 <span className="hidden sm:inline">Featured</span>
               </Button>
               {hasActiveFilters && (
@@ -120,14 +120,14 @@ export default function BlogList({
             </div>
 
             {/* Inline tag pills */}
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide sm:flex-wrap sm:overflow-visible sm:pb-0">
               {allTags.map((tag) => {
                 const isSelected = selectedTags.includes(tag);
                 return (
                   <Badge
                     key={tag}
                     variant={isSelected ? "default" : "outline"}
-                    className={`cursor-pointer transition-colors ${
+                    className={`cursor-pointer transition-colors shrink-0 py-2 px-3.5 text-sm sm:py-0.5 sm:px-2.5 sm:text-xs ${
                       isSelected
                         ? ""
                         : "hover:bg-muted"
@@ -155,8 +155,8 @@ export default function BlogList({
         </div>
       </div>
 
-      {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+      {/* Content Area */}
+      <div className="px-4 sm:px-6 lg:px-8 pb-8">
         <div className="max-w-7xl mx-auto">
           {/* Blog Posts Grid */}
           {displayPosts.length > 0 ? (
@@ -207,7 +207,7 @@ export default function BlogList({
                                 <Badge
                                   key={tag}
                                   variant="outline"
-                                  className="text-xs cursor-pointer hover:bg-muted"
+                                  className="text-xs cursor-pointer hover:bg-muted py-1 sm:py-0.5"
                                   onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -226,7 +226,7 @@ export default function BlogList({
                                 >
                                   <Badge
                                     variant="outline"
-                                    className="text-xs cursor-pointer"
+                                    className="text-xs cursor-pointer py-1 px-3 sm:py-0.5 sm:px-2.5"
                                     aria-label={`Show ${
                                       post.tags.length - UI.MAX_VISIBLE_TAGS
                                     } more tags`}

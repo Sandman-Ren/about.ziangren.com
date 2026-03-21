@@ -55,7 +55,7 @@ interface ChatBubbleProps {
 function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
   return (
     // Outer div handles positioning (CSS transforms not affected by Framer Motion)
-    <div className="absolute bottom-full left-[45%] -translate-x-1/2 md:left-auto md:translate-x-0 md:right-1/2 lg:right-3/4 mb-3 z-20 pointer-events-auto">
+    <div className="absolute top-full mt-3 left-[45%] -translate-x-1/2 md:top-auto md:bottom-full md:mt-0 md:mb-3 md:left-auto md:translate-x-0 md:right-1/2 lg:right-3/4 z-20 pointer-events-auto">
       {/* Inner motion.div handles animation only */}
       <motion.div
         initial={{ opacity: 0, scale: 0.3, y: -10 }}
@@ -71,7 +71,7 @@ function ChatBubble({ quote, onMouseEnter, onMouseLeave }: ChatBubbleProps) {
             {quote}
           </p>
           {/* Notch — rotated square with matching surface, responsive position */}
-          <div className="absolute -bottom-[7px] left-[55%] -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 w-3.5 h-3.5 rotate-45 bg-background/95 border-r-2 border-b-2 border-foreground/15" />
+          <div className="absolute -top-[7px] left-[55%] -translate-x-1/2 md:top-auto md:-bottom-[7px] md:left-auto md:translate-x-0 md:right-6 w-3.5 h-3.5 rotate-45 bg-background/95 border-l-2 border-t-2 md:border-l-0 md:border-t-0 md:border-r-2 md:border-b-2 border-foreground/15" />
         </div>
       </motion.div>
     </div>
@@ -99,7 +99,7 @@ export function HeroSection() {
   const recentPosts = getAllBlogPosts().slice(0, 3)
 
   return (
-    <section className="relative min-h-[100dvh] lg:min-h-0 lg:h-full flex flex-col px-4 sm:px-6 lg:px-8">
+    <section className="relative min-h-[85dvh] lg:min-h-0 lg:h-full flex flex-col px-4 sm:px-6 lg:px-8">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/30" />
       {/* Subtle grid pattern */}

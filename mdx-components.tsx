@@ -9,9 +9,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     // Heading components with refined typography and anchor support
     h1: ({ children, id, ...props }: ComponentPropsWithoutRef<'h1'>) => (
-      <h1 
+      <h1
         id={id}
-        className="scroll-m-24 text-3xl sm:text-4xl font-bold tracking-tight text-foreground mt-8 mb-4 first:mt-0"
+        className="scroll-m-24 text-2xl sm:text-3xl font-bold tracking-tight text-foreground mt-8 mb-4 first:mt-0"
         {...props}
       >
         {children}
@@ -20,7 +20,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h2: ({ children, id, ...props }: ComponentPropsWithoutRef<'h2'>) => (
       <h2 
         id={id}
-        className="scroll-m-24 text-2xl sm:text-3xl font-semibold tracking-tight text-foreground border-b border-border pb-2 mt-12 mb-4 first:mt-0"
+        className="scroll-m-24 text-2xl sm:text-3xl font-semibold tracking-tight text-foreground border-b border-border pb-2 mt-16 mb-4 first:mt-0"
         {...props}
       >
         {children}
@@ -47,19 +47,19 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     
     // Paragraph with comfortable reading line height
     p: ({ children }) => (
-      <p className="text-base leading-relaxed text-foreground/90 [&:not(:first-child)]:mt-5">
+      <p className="text-base leading-relaxed dark:leading-[1.7] text-foreground [&:not(:first-child)]:mt-6">
         {children}
       </p>
     ),
     
     // List components with better spacing
     ul: ({ children }) => (
-      <ul className="my-5 ml-6 list-disc text-foreground/90 [&>li]:mt-2 [&>li]:leading-relaxed marker:text-muted-foreground">
+      <ul className="my-6 ml-6 list-disc text-foreground [&>li]:mt-2 [&>li]:leading-relaxed dark:[&>li]:leading-[1.7] marker:text-muted-foreground">
         {children}
       </ul>
     ),
     ol: ({ children }) => (
-      <ol className="my-5 ml-6 list-decimal text-foreground/90 [&>li]:mt-2 [&>li]:leading-relaxed marker:text-muted-foreground">
+      <ol className="my-6 ml-6 list-decimal text-foreground [&>li]:mt-2 [&>li]:leading-relaxed dark:[&>li]:leading-[1.7] marker:text-muted-foreground">
         {children}
       </ol>
     ),
@@ -69,13 +69,23 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </li>
     ),
     
-    // Inline code with subtle styling
-    code: ({ children }) => (
-      <code className="relative rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.9em] font-medium text-foreground before:content-none after:content-none">
-        {children}
-      </code>
-    ),
-    // Code block with enhanced styling
+    // Code: differentiates inline vs block (rehype-highlight adds className to block code)
+    code: ({ children, className, ...props }: ComponentPropsWithoutRef<'code'>) => {
+      const isBlock = className?.includes('hljs') || className?.includes('language-')
+      if (isBlock) {
+        return (
+          <code className={`font-mono ${className}`} {...props}>
+            {children}
+          </code>
+        )
+      }
+      return (
+        <code className="relative rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.9em] font-medium text-foreground before:content-none after:content-none" {...props}>
+          {children}
+        </code>
+      )
+    },
+    // Code block container
     pre: ({ children }) => (
       <pre className="overflow-x-auto rounded-lg border border-border bg-muted/50 p-4 my-6 text-sm leading-relaxed">
         {children}
@@ -123,7 +133,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     
     // Strong and emphasis
     strong: ({ children }) => (
-      <strong className="font-semibold text-foreground">
+      <strong className="font-bold text-foreground">
         {children}
       </strong>
     ),
@@ -162,7 +172,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </th>
     ),
     td: ({ children }) => (
-      <td className="px-4 py-3 align-middle text-foreground/90">
+      <td className="px-4 py-3 align-middle text-foreground tabular-nums">
         {children}
       </td>
     ),

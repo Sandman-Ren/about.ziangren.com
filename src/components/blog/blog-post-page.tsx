@@ -22,11 +22,11 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
   const issueUrl = generateGitHubIssueUrl(post)
 
   return (
-    <article className="flex-1 flex flex-col overflow-hidden">
-      {/* Cover Image - Full width hero (fixed at top) */}
+    <article>
+      {/* Cover Image */}
       {post.coverImage && (
         <motion.div
-          className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden flex-shrink-0"
+          className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden"
           initial="initial"
           animate="animate"
           variants={fade}
@@ -43,9 +43,8 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
         </motion.div>
       )}
 
-      {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Content */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back to Blog Link + Article Header: single animation group */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -89,19 +88,19 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
                 <span className="font-medium">{post.author}</span>
               </div>
             )}
-            <span className="text-border">•</span>
+            <span className="text-border hidden sm:inline">•</span>
             <div className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
               <time dateTime={post.date}>{formatDate(post.date)}</time>
             </div>
-            <span className="text-border">•</span>
+            <span className="text-border hidden sm:inline">•</span>
             <div className="flex items-center gap-1.5">
               <Clock className="h-4 w-4" />
               <span>{post.readingTime} min read</span>
             </div>
             {post.lastModified && post.lastModified !== post.date && (
               <>
-                <span className="text-border">•</span>
+                <span className="text-border hidden sm:inline">•</span>
                 <div className="flex items-center gap-1.5">
                   <span className="italic">Updated {formatDate(post.lastModified)}</span>
                 </div>
@@ -113,7 +112,7 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
           <div className="flex flex-wrap gap-2 mb-6">
             {post.tags.map(tag => (
               <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>
-                <Badge variant="outline" className="hover:bg-muted cursor-pointer transition-colors">
+                <Badge variant="outline" className="hover:bg-muted cursor-pointer transition-colors py-1.5 px-3 sm:py-0.5 sm:px-2.5">
                   {tag}
                 </Badge>
               </Link>
@@ -141,17 +140,7 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
           transition={{ duration: 0.4, delay: 0.15 }}
         >
           <div
-            className="prose prose-lg max-w-none dark:prose-invert
-              prose-headings:font-semibold prose-headings:tracking-tight
-              prose-p:text-foreground/90 prose-p:leading-relaxed
-              prose-a:text-primary prose-a:decoration-primary/30 prose-a:underline-offset-4 hover:prose-a:decoration-primary
-              prose-strong:text-foreground prose-strong:font-semibold
-              prose-blockquote:border-primary/50 prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:not-italic
-              prose-pre:bg-muted/50 prose-pre:border prose-pre:border-border
-              prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:font-medium
-              prose-code:before:content-none prose-code:after:content-none
-              prose-img:rounded-lg prose-img:border prose-img:border-border
-              prose-hr:border-border"
+            className="prose max-w-none dark:prose-invert"
           >
             {children}
           </div>
@@ -192,7 +181,6 @@ export default function BlogPostPage({ post, children }: BlogPostPageProps) {
         </footer>
         </motion.div>
         </div>
-      </div>
     </article>
   )
 }
