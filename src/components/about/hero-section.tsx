@@ -260,13 +260,14 @@ export function HeroSection() {
           {/* Divider */}
           <div className="border-t border-border/60 mb-6 lg:mb-4" />
 
-          <div className="flex items-baseline justify-between mb-4 lg:mb-3">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground/60">
+          <div className="flex items-center gap-3 mb-4 lg:mb-3">
+            <h2 className="text-sm font-medium text-muted-foreground whitespace-nowrap">
               Recent Writing
             </h2>
+            <div className="h-px flex-1 bg-border" />
             <Link
               href="/blog"
-              className="group flex items-center gap-1.5 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors"
+              className="group flex items-center gap-1.5 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors shrink-0"
             >
               All posts
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />

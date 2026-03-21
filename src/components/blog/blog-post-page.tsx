@@ -4,7 +4,7 @@ import { BlogPost, CollectionContext } from '@/types/blog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Calendar, Clock, ArrowLeft, ExternalLink, MessageCircle, User } from 'lucide-react'
+import { Calendar, Clock, ArrowLeft, ExternalLink, MessageCircle, Sparkles, User } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { generateGitHubIssueUrl } from '@/lib/urls'
@@ -53,23 +53,20 @@ export default function BlogPostPage({ post, collectionContext, children }: Blog
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="mb-8 flex items-center gap-4">
+          <div className="mb-8 flex items-center gap-2">
             <Link href="/blog">
-              <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Blog
+              <Button variant="outline" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-3.5 w-3.5" />
+                Blog
               </Button>
             </Link>
             {collectionContext && (
-              <>
-                <span className="text-border">•</span>
-                <Link href={`/blog/collections/${collectionContext.collection.slug}`}>
-                  <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    {collectionContext.collection.title}
-                  </Button>
-                </Link>
-              </>
+              <Link href={`/blog/collections/${collectionContext.collection.slug}`}>
+                <Button variant="outline" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                  {collectionContext.collection.title}
+                </Button>
+              </Link>
             )}
           </div>
 
@@ -135,7 +132,7 @@ export default function BlogPostPage({ post, collectionContext, children }: Blog
           {/* AI Assisted Notice */}
           {post.aiAssisted && (
             <div className="flex items-center gap-2.5 p-3 bg-muted/40 border border-border/50 rounded-lg text-sm text-muted-foreground">
-              <span className="text-lg">🤖</span>
+              <Sparkles className="h-4 w-4 shrink-0" />
               <span>
                 This post was written with AI assistance to help structure content and improve clarity.
               </span>

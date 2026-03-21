@@ -97,8 +97,8 @@ test.describe('In-Post Collection Navigation', () => {
   test('should show back links to blog and collection at top', async ({ page }) => {
     await page.goto('/blog/homelab-installing-proxmox')
 
-    // Should have both "Back to Blog" and collection back link
-    await expect(page.getByRole('link', { name: 'Back to Blog' })).toBeVisible()
+    // Should have both "Blog" and collection back link buttons
+    await expect(page.getByRole('link', { name: 'Blog', exact: true }).first()).toBeVisible()
     await expect(page.getByRole('link', { name: 'Homelab Journey', exact: true }).first()).toBeVisible()
   })
 
@@ -151,8 +151,8 @@ test.describe('In-Post Collection Navigation', () => {
   test('non-collection post should show plain back link', async ({ page }) => {
     await page.goto('/blog/welcome-to-my-new-blog')
 
-    // Should have "Back to Blog" not breadcrumb
-    await expect(page.getByText('Back to Blog')).toBeVisible()
+    // Should have "Blog" back button
+    await expect(page.getByRole('link', { name: 'Blog', exact: true }).first()).toBeVisible()
 
     // Should NOT have collection navigation in footer
     await expect(page.getByText(/Episode \d+ of \d+/i)).not.toBeVisible()
@@ -167,7 +167,7 @@ test.describe('Blog List - Collection Integration', () => {
     // Collection cards should be visible
     await expect(page.getByText('View collection').first()).toBeVisible()
     await expect(page.getByText('3-part series')).toBeVisible()
-    await expect(page.getByText('2 posts')).toBeVisible()
+    await expect(page.getByText('2 posts').last()).toBeVisible()
   })
 
   test('should show series badge on collection posts', async ({ page }) => {

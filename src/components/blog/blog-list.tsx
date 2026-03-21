@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowRight, Calendar, ChevronDown, Clock, Library, Search, Star, Tag, X } from "lucide-react";
+import { ArrowRight, Calendar, ChevronDown, Clock, Library, Search, Sparkles, Star, Tag, X } from "lucide-react";
 import { BlogPost, Collection, SearchFilters } from "@/types/blog";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatDate } from "@/lib/formatting";
@@ -134,12 +134,12 @@ export default function BlogList({
                 <Button
                   variant="ghost"
                   onClick={clearFilters}
-                  size="sm"
-                  className="shrink-0 h-10"
+                  size="icon"
+                  className="shrink-0 h-10 w-10"
                   aria-label="Clear all filters"
+                  title="Clear all filters"
                 >
-                  <X className="h-4 w-4 mr-1" />
-                  Clear
+                  <X className="h-4 w-4" />
                 </Button>
               )}
             </div>
@@ -207,7 +207,7 @@ export default function BlogList({
                 </h2>
                 <div className="h-px flex-1 bg-border" />
               </div>
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-3 md:gap-6 md:grid-cols-2">
                 {collections.map((collection) => (
                   <motion.div
                     key={collection.slug}
@@ -219,8 +219,21 @@ export default function BlogList({
                       href={`/blog/collections/${collection.slug}`}
                       className="block h-full"
                     >
-                      <Card className="h-full cursor-pointer card-hover-shadow">
-                        <CardHeader>
+                      <Card className="h-full flex flex-col cursor-pointer card-hover-shadow">
+                        {/* Mobile: compact single-line */}
+                        <CardContent className="p-3 md:hidden">
+                          <div className="flex items-center gap-3">
+                            <Library className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            <span className="text-sm font-medium truncate">{collection.title}</span>
+                            <Badge variant="secondary" className="text-xs shrink-0 py-0 ml-auto">
+                              {collection.ordered
+                                ? `${collection.postCount} parts`
+                                : `${collection.postCount} posts`}
+                            </Badge>
+                          </div>
+                        </CardContent>
+                        {/* Desktop: full card */}
+                        <CardHeader className="hidden md:flex">
                           <div className="flex items-center gap-1.5 mb-1">
                             <Library className="h-4 w-4 text-muted-foreground" />
                             <Badge variant="secondary" className="text-xs gap-1 py-0">
@@ -236,7 +249,7 @@ export default function BlogList({
                             {collection.description}
                           </CardDescription>
                         </CardHeader>
-                        <CardContent className="pt-0">
+                        <CardContent className="hidden md:block pt-0 mt-auto">
                           <div className="flex items-center text-xs text-muted-foreground">
                             <span>View collection</span>
                             <ArrowRight className="h-3 w-3 ml-1" />
@@ -366,7 +379,7 @@ export default function BlogList({
                           </div>
 
                           {/* Meta Information */}
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
                               <span>{formatDate(post.date)}</span>
@@ -376,9 +389,10 @@ export default function BlogList({
                               <span>{post.readingTime} min read</span>
                             </div>
                             {post.aiAssisted && (
-                              <span className="text-muted-foreground/60">
-                                AI assisted
-                              </span>
+                              <div className="flex items-center gap-1 text-muted-foreground/70">
+                                <Sparkles className="h-3 w-3" />
+                                <span>AI assisted</span>
+                              </div>
                             )}
                           </div>
                         </CardContent>

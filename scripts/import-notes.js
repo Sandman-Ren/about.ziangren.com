@@ -217,8 +217,14 @@ function processNotes() {
       publishedSlugs.push(file.slug)
 
       // Write MDX file (content without frontmatter)
+      // Strip leading h1 if it matches the frontmatter title (avoids duplicate h1 on page)
+      let mdxContent = content.trim()
+      const h1Match = mdxContent.match(/^#\s+(.+)$/m)
+      if (h1Match && mdxContent.startsWith(h1Match[0])) {
+        mdxContent = mdxContent.slice(h1Match[0].length).trim()
+      }
       const mdxPath = path.join(OUTPUT_DIR, `${file.slug}.mdx`)
-      fs.writeFileSync(mdxPath, content.trim(), 'utf-8')
+      fs.writeFileSync(mdxPath, mdxContent, 'utf-8')
       console.log(`  ✅ ${file.slug}.md → src/content/blog/${file.slug}.mdx`)
     } else {
       console.log(`  ⏸️  ${file.slug}.md (unpublished, skipped)`)
