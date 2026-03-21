@@ -65,22 +65,14 @@ export default function BlogList({
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <motion.div
-              className="flex items-center justify-between"
+            <motion.h1
+              className="text-4xl font-bold tracking-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-4xl font-bold tracking-tight">
-                Blog
-              </h1>
-              <Link href="/blog/collections">
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <Library className="h-4 w-4" />
-                  <span className="hidden sm:inline">Collections</span>
-                </Button>
-              </Link>
-            </motion.div>
+              Blog
+            </motion.h1>
           </div>
 
           {/* Search and Filters */}
@@ -167,52 +159,57 @@ export default function BlogList({
 
       {/* Collections Section — hidden when filters are active */}
       {collections.length > 0 && !hasActiveFilters && (
-        <div className="px-4 sm:px-6 lg:px-8 pb-6">
+        <div className="px-4 sm:px-6 lg:px-8 pb-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Library className="h-4 w-4 text-muted-foreground" />
-                  <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                    Collections
-                  </h2>
-                </div>
-                <Link href="/blog/collections" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-                  View all
-                  <ArrowRight className="h-3 w-3" />
-                </Link>
+              <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+                  Collections
+                </h2>
+                <div className="h-px flex-1 bg-border" />
               </div>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-6 md:grid-cols-2">
                 {collections.map((collection) => (
-                  <Link
+                  <motion.div
                     key={collection.slug}
-                    href={`/blog/collections/${collection.slug}`}
-                    className="block"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
                   >
-                    <Card className="cursor-pointer card-hover-shadow">
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <h3 className="font-medium text-sm leading-tight mb-1 truncate">
-                              {collection.title}
-                            </h3>
-                            <p className="text-xs text-muted-foreground line-clamp-1">
-                              {collection.description}
-                            </p>
+                    <Link
+                      href={`/blog/collections/${collection.slug}`}
+                      className="block h-full"
+                    >
+                      <Card className="h-full cursor-pointer card-hover-shadow">
+                        <CardHeader>
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <Library className="h-4 w-4 text-muted-foreground" />
+                            <Badge variant="secondary" className="text-xs gap-1 py-0">
+                              {collection.ordered
+                                ? `${collection.postCount}-part series`
+                                : `${collection.postCount} posts`}
+                            </Badge>
                           </div>
-                          <Badge variant="secondary" className="text-xs shrink-0 py-0">
-                            {collection.ordered
-                              ? `${collection.postCount} parts`
-                              : `${collection.postCount} posts`}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                          <CardTitle className="text-lg leading-tight">
+                            {collection.title}
+                          </CardTitle>
+                          <CardDescription className="line-clamp-2">
+                            {collection.description}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="flex items-center text-xs text-muted-foreground">
+                            <span>View collection</span>
+                            <ArrowRight className="h-3 w-3 ml-1" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
@@ -223,6 +220,16 @@ export default function BlogList({
       {/* Content Area */}
       <div className="px-4 sm:px-6 lg:px-8 pb-8">
         <div className="max-w-7xl mx-auto">
+          {/* Posts Section Header — only when collections are shown above */}
+          {collections.length > 0 && !hasActiveFilters && (
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+                Posts
+              </h2>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+          )}
+
           {/* Blog Posts Grid */}
           {displayPosts.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 mb-12">

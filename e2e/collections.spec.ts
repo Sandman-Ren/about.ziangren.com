@@ -161,11 +161,14 @@ test.describe('In-Post Collection Navigation', () => {
 })
 
 test.describe('Blog List - Collection Integration', () => {
-  test('should show Collections button in header', async ({ page }) => {
+  test('should show collection cards on blog list', async ({ page }) => {
     await page.goto('/blog')
 
-    const collectionsLink = page.getByRole('link', { name: /Collections/i })
-    await expect(collectionsLink).toBeVisible()
+    // Collection cards should be visible — use the "View collection" text unique to collection cards
+    await expect(page.getByText('View collection').first()).toBeVisible()
+    // Post count badges
+    await expect(page.getByText('3-part series')).toBeVisible()
+    await expect(page.getByText('2 posts')).toBeVisible()
   })
 
   test('should show series badge on collection posts', async ({ page }) => {
@@ -176,10 +179,10 @@ test.describe('Blog List - Collection Integration', () => {
     await expect(seriesBadges.first()).toBeVisible()
   })
 
-  test('Collections button should navigate to collections page', async ({ page }) => {
+  test('collection card should navigate to collection page', async ({ page }) => {
     await page.goto('/blog')
 
-    await page.getByRole('link', { name: /Collections/i }).click()
-    await expect(page).toHaveURL(/\/blog\/collections/)
+    await page.getByRole('link', { name: /3-part series Homelab Journey/i }).click()
+    await expect(page).toHaveURL(/\/blog\/collections\/homelab-journey/)
   })
 })
