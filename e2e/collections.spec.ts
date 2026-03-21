@@ -164,9 +164,8 @@ test.describe('Blog List - Collection Integration', () => {
   test('should show collection cards on blog list', async ({ page }) => {
     await page.goto('/blog')
 
-    // Collection cards should be visible — use the "View collection" text unique to collection cards
+    // Collection cards should be visible
     await expect(page.getByText('View collection').first()).toBeVisible()
-    // Post count badges
     await expect(page.getByText('3-part series')).toBeVisible()
     await expect(page.getByText('2 posts')).toBeVisible()
   })

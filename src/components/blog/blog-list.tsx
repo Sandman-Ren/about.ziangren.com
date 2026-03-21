@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   Card,
@@ -17,9 +18,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowRight, Calendar, Clock, Library, Search, Star, X } from "lucide-react";
+import { ArrowRight, Calendar, ChevronDown, Clock, Library, Search, Star, Tag, X } from "lucide-react";
 import { BlogPost, Collection, SearchFilters } from "@/types/blog";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { formatDate } from "@/lib/formatting";
 import { useBlogFilters } from "@/hooks/useBlogFilters";
 import { POSTS_PER_PAGE, UI } from "@/lib/constants";
@@ -35,6 +36,8 @@ export default function BlogList({
   collections = [],
   initialFilters = {},
 }: BlogListProps) {
+  const [tagsExpanded, setTagsExpanded] = useState(false);
+
   // Use the custom hook for all filtering, search, and pagination logic
   const {
     filteredPosts,
@@ -58,13 +61,16 @@ export default function BlogList({
   const skipPagination = filteredPosts.length < POSTS_PER_PAGE * 2;
   const displayPosts = skipPagination ? filteredPosts : paginatedPosts;
 
+  // Expand tags automatically when tags are selected
+  const showTags = tagsExpanded || selectedTags.length > 0;
+
   return (
     <div>
       {/* Header Section */}
       <div className="px-4 sm:px-6 lg:px-8 pt-8 pb-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6">
             <motion.h1
               className="text-4xl font-bold tracking-tight"
               initial={{ opacity: 0, y: 20 }}
@@ -77,12 +83,12 @@ export default function BlogList({
 
           {/* Search and Filters */}
           <motion.div
-            className="mb-6 space-y-3"
+            className="space-y-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            {/* Search row: input + featured toggle + clear */}
+            {/* Search row: input + tags toggle + featured toggle + clear */}
             <div className="flex gap-2 items-center">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -96,6 +102,23 @@ export default function BlogList({
                   aria-label="Search blog posts"
                 />
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setTagsExpanded(!tagsExpanded)}
+                className={`shrink-0 h-10 gap-1.5 ${showTags ? "border-foreground/30" : ""}`}
+                aria-expanded={showTags}
+                aria-label="Filter by tags"
+              >
+                <Tag className="h-4 w-4" />
+                <span className="hidden sm:inline">Tags</span>
+                {selectedTags.length > 0 && (
+                  <Badge variant="default" className="h-5 min-w-5 px-1.5 text-xs rounded-full">
+                    {selectedTags.length}
+                  </Badge>
+                )}
+                <ChevronDown className={`h-3 w-3 transition-transform ${showTags ? "rotate-180" : ""}`} />
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -121,31 +144,43 @@ export default function BlogList({
               )}
             </div>
 
-            {/* Inline tag pills */}
-            <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide sm:flex-wrap sm:overflow-visible sm:pb-0">
-              {allTags.map((tag) => {
-                const isSelected = selectedTags.includes(tag);
-                return (
-                  <Badge
-                    key={tag}
-                    variant={isSelected ? "default" : "outline"}
-                    className={`cursor-pointer transition-colors shrink-0 py-2 px-3.5 text-sm sm:py-0.5 sm:px-2.5 sm:text-xs ${
-                      isSelected
-                        ? ""
-                        : "hover:bg-muted"
-                    }`}
-                    onClick={() => (isSelected ? removeTag(tag) : addTag(tag))}
-                    aria-pressed={isSelected}
-                    aria-label={isSelected ? `Remove tag ${tag}` : `Filter by tag ${tag}`}
-                  >
-                    {tag}
-                    {isSelected && (
-                      <X className="ml-1 h-3 w-3" />
-                    )}
-                  </Badge>
-                );
-              })}
-            </div>
+            {/* Collapsible tag pills */}
+            <AnimatePresence>
+              {showTags && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide sm:flex-wrap sm:overflow-visible sm:pb-0">
+                    {allTags.map((tag) => {
+                      const isSelected = selectedTags.includes(tag);
+                      return (
+                        <Badge
+                          key={tag}
+                          variant={isSelected ? "default" : "outline"}
+                          className={`cursor-pointer transition-colors shrink-0 py-2 px-3.5 text-sm sm:py-0.5 sm:px-2.5 sm:text-xs ${
+                            isSelected
+                              ? ""
+                              : "hover:bg-muted"
+                          }`}
+                          onClick={() => (isSelected ? removeTag(tag) : addTag(tag))}
+                          aria-pressed={isSelected}
+                          aria-label={isSelected ? `Remove tag ${tag}` : `Filter by tag ${tag}`}
+                        >
+                          {tag}
+                          {isSelected && (
+                            <X className="ml-1 h-3 w-3" />
+                          )}
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Results count — only shown when filters narrow the list */}
             {hasActiveFilters && (
@@ -159,7 +194,7 @@ export default function BlogList({
 
       {/* Collections Section — hidden when filters are active */}
       {collections.length > 0 && !hasActiveFilters && (
-        <div className="px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="px-4 sm:px-6 lg:px-8 pb-6">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -232,7 +267,7 @@ export default function BlogList({
 
           {/* Blog Posts Grid */}
           {displayPosts.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 mb-12">
+            <div className="grid gap-6 md:grid-cols-2 mb-8">
               {displayPosts.map((post, index) => {
                 const isFeatured = !!post.featured;
 
@@ -368,10 +403,10 @@ export default function BlogList({
             </motion.div>
           )}
 
-          {/* Pagination — hidden when post count is small enough to show all */}
+          {/* Pagination */}
           {!skipPagination && totalPages > 1 && (
             <motion.div
-              className="flex justify-center items-center space-x-2"
+              className="flex justify-center items-center space-x-2 pb-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
