@@ -206,6 +206,10 @@ export default function BlogList({
                   Collections
                 </h2>
                 <div className="h-px flex-1 bg-border" />
+                <Link href="/blog/collections" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 shrink-0">
+                  View all
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
               </div>
               <div className="grid gap-3 md:gap-6 md:grid-cols-2">
                 {collections.map((collection) => (

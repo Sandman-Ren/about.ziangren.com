@@ -25,9 +25,9 @@ test.describe('Collections Index Page', () => {
     await expect(page.getByText('2 posts')).toBeVisible()
   })
 
-  test('should have back to blog link', async ({ page }) => {
-    const backLink = page.getByRole('link', { name: /Back to Blog/i })
-    await expect(backLink).toBeVisible()
+  test('should have back button', async ({ page }) => {
+    const backButton = page.getByRole('button', { name: /Back/i })
+    await expect(backButton).toBeVisible()
   })
 
   test('should navigate to collection detail page', async ({ page }) => {
@@ -66,9 +66,9 @@ test.describe('Collection Detail Page - Ordered', () => {
     await expect(episodeLinks.nth(2)).toContainText('Docker Compose')
   })
 
-  test('should have back to collections link', async ({ page }) => {
-    const backLink = page.getByRole('link', { name: /Back to Collections/i })
-    await expect(backLink).toBeVisible()
+  test('should have back button', async ({ page }) => {
+    const backButton = page.getByRole('button', { name: /Back/i })
+    await expect(backButton).toBeVisible()
   })
 
   test('should navigate to individual post', async ({ page }) => {
@@ -97,8 +97,8 @@ test.describe('In-Post Collection Navigation', () => {
   test('should show back links to blog and collection at top', async ({ page }) => {
     await page.goto('/blog/homelab-installing-proxmox')
 
-    // Should have both "Blog" and collection back link buttons
-    await expect(page.getByRole('link', { name: 'Blog', exact: true }).first()).toBeVisible()
+    // Should have both "Back" button and collection link
+    await expect(page.getByRole('button', { name: 'Back', exact: true })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Homelab Journey', exact: true }).first()).toBeVisible()
   })
 
@@ -151,8 +151,8 @@ test.describe('In-Post Collection Navigation', () => {
   test('non-collection post should show plain back link', async ({ page }) => {
     await page.goto('/blog/welcome-to-my-new-blog')
 
-    // Should have "Blog" back button
-    await expect(page.getByRole('link', { name: 'Blog', exact: true }).first()).toBeVisible()
+    // Should have "Back" button
+    await expect(page.getByRole('button', { name: 'Back', exact: true })).toBeVisible()
 
     // Should NOT have collection navigation in footer
     await expect(page.getByText(/Episode \d+ of \d+/i)).not.toBeVisible()

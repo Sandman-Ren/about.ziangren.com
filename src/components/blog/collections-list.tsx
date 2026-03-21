@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,17 +14,22 @@ interface CollectionsListProps {
 }
 
 export default function CollectionsList({ collections }: CollectionsListProps) {
+  const router = useRouter()
+
   return (
     <div>
       <div className="px-4 sm:px-6 lg:px-8 pt-8 pb-4">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-2">
-            <Link href="/blog">
-              <Button variant="ghost" size="sm" className="p-0 h-auto text-muted-foreground hover:text-foreground">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Blog
-              </Button>
-            </Link>
+          <div className="mb-8 flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 text-muted-foreground hover:text-foreground"
+              onClick={() => router.back()}
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back
+            </Button>
           </div>
 
           <motion.div

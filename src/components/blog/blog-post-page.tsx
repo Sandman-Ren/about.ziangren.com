@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Calendar, Clock, ArrowLeft, ExternalLink, MessageCircle, Sparkles, User } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { generateGitHubIssueUrl } from '@/lib/urls'
 import { formatDate } from '@/lib/formatting'
@@ -21,6 +22,7 @@ interface BlogPostPageProps {
 }
 
 export default function BlogPostPage({ post, collectionContext, children }: BlogPostPageProps) {
+  const router = useRouter()
   const issueUrl = generateGitHubIssueUrl(post)
 
   return (
@@ -54,12 +56,15 @@ export default function BlogPostPage({ post, collectionContext, children }: Blog
           transition={{ duration: 0.5 }}
         >
           <div className="mb-8 flex items-center gap-2">
-            <Link href="/blog">
-              <Button variant="outline" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
-                <ArrowLeft className="h-3.5 w-3.5" />
-                Blog
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 text-muted-foreground hover:text-foreground"
+              onClick={() => router.back()}
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back
+            </Button>
             {collectionContext && (
               <Link href={`/blog/collections/${collectionContext.collection.slug}`}>
                 <Button variant="outline" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
@@ -184,7 +189,7 @@ export default function BlogPostPage({ post, collectionContext, children }: Blog
                 Have questions, suggestions, or spotted an issue? Let me know!
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-row gap-2">
               <Button asChild variant="outline" size="sm">
                 <a href={issueUrl} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-4 w-4 mr-2" />
