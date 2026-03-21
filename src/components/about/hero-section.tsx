@@ -215,8 +215,8 @@ export function HeroSection() {
           >
             <div className="relative inline-block">
               <motion.div
-                whileTap={{ scale: 0.85 }}
-                transition={springs.bouncy}
+                whileTap={{ scale: 0.97 }}
+                transition={springs.snappy}
               >
                 <Avatar
                   className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 cursor-pointer border border-border card-hover-shadow transition-all duration-300 select-none"
@@ -257,9 +257,6 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.35 }}
         >
-          {/* Divider */}
-          <div className="border-t border-border/60 mb-6 lg:mb-4" />
-
           <div className="flex items-center gap-3 mb-4 lg:mb-3">
             <h2 className="text-sm font-medium text-muted-foreground whitespace-nowrap">
               Recent Writing
