@@ -219,7 +219,7 @@ export function HeroSection() {
                 transition={springs.bouncy}
               >
                 <Avatar
-                  className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 cursor-pointer ring-4 ring-border hover:ring-primary/50 transition-all duration-300 select-none shadow-xl"
+                  className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 cursor-pointer border border-border card-hover-shadow transition-all duration-300 select-none"
                   onClick={handleAvatarClick}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
