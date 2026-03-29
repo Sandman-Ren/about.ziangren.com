@@ -2,6 +2,7 @@
 export const slugs = [
   "building-modern-react-typescript",
   "building-my-own-server",
+  "hardening-autonomous-ai-agent-mac-mini",
   "homelab-choosing-hardware",
   "homelab-docker-compose-setup",
   "homelab-installing-proxmox",

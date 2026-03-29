@@ -1,6 +1,36 @@
 {
   "posts": [
     {
+      "slug": "hardening-autonomous-ai-agent-mac-mini",
+      "title": "Hardening an Autonomous AI Agent: How I Deployed OpenClaw on a Mac Mini",
+      "summary": "Running an autonomous AI agent at home means treating it like untrusted code. Here's how I locked down OpenClaw with firewall rules, egress filtering, container isolation, model fallback chains, and centralized observability — all on a Mac Mini.",
+      "date": "2026-03-29",
+      "tags": [
+        "ai-agents",
+        "self-hosting",
+        "security",
+        "devops",
+        "homelab"
+      ],
+      "keywords": [
+        "autonomous AI agent deployment",
+        "AI agent security hardening",
+        "Apple Containers macOS",
+        "egress proxy AI bot",
+        "LLM cost optimization",
+        "OpenClaw deployment",
+        "Mac Mini server",
+        "AI agent observability"
+      ],
+      "published": true,
+      "featured": false,
+      "aiAssisted": true,
+      "author": "Ziang Ren",
+      "readingTime": 10,
+      "collection": null,
+      "episode": null
+    },
+    {
       "slug": "uptime-kuma-setup",
       "title": "Self-Hosted Monitoring with Uptime Kuma: Docker Container and HTTP Endpoint Monitoring",
       "summary": "A complete guide to setting up Uptime Kuma for self-hosted monitoring with Docker container health checks, HTTP endpoint monitoring, Traefik integration with IP allowlisting, and email alerts via Resend SMTP.",

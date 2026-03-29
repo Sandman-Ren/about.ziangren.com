@@ -2,8 +2,9 @@ import type { MDXComponents } from 'mdx/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { Mermaid } from '@/components/ui/mermaid'
 import Link from 'next/link'
-import { ComponentPropsWithoutRef } from 'react'
+import { ComponentPropsWithoutRef, isValidElement, ReactNode } from 'react'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -85,12 +86,23 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         </code>
       )
     },
-    // Code block container
-    pre: ({ children }) => (
-      <pre className="overflow-x-auto rounded-lg border border-border bg-muted/50 p-4 my-6 text-sm leading-relaxed">
-        {children}
-      </pre>
-    ),
+    // Code block container — intercept mermaid blocks for diagram rendering
+    pre: ({ children, ...props }: ComponentPropsWithoutRef<'pre'>) => {
+      if (isValidElement<{ className?: string; children?: ReactNode }>(children)) {
+        const className = children.props.className || ''
+        if (className.includes('language-mermaid')) {
+          const chart = typeof children.props.children === 'string'
+            ? children.props.children
+            : ''
+          return <Mermaid chart={chart.trim()} />
+        }
+      }
+      return (
+        <pre className="overflow-x-auto rounded-lg border border-border bg-muted/50 p-4 my-6 text-sm leading-relaxed" {...props}>
+          {children}
+        </pre>
+      )
+    },
     
     // Link with animated underline
     a: ({ href, children, ...props }: ComponentPropsWithoutRef<'a'>) => {
