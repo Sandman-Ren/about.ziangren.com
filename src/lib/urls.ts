@@ -25,7 +25,7 @@ export function generateGitHubIssueUrl(post: BlogPost): string {
 **Post Metadata:**
 - Date: ${post.date}
 - Tags: ${post.tags.join(', ')}
-- AI Assisted: ${post.aiAssisted ? 'Yes' : 'No'}
+- AI Assisted: ${post.aiAssisted ? (post.aiAssisted === 'generated' ? 'Generated' : 'Assisted') : 'No'}
 `)
 
   return `${EXTERNAL_URLS.GITHUB_REPO}/issues/new?title=${title}&body=${body}&labels=blog,content`

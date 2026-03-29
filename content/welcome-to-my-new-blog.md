@@ -16,7 +16,7 @@ keywords:
   - web development
 published: true
 featured: true
-aiAssisted: true
+aiAssisted: assisted
 author: Ziang Ren
 ---
 

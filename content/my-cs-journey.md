@@ -16,7 +16,7 @@ keywords:
   - personal growth
 published: true
 featured: true
-aiAssisted: true
+aiAssisted: assisted
 author: Ziang Ren
 ---
 

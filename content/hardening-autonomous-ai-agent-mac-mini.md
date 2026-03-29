@@ -19,7 +19,7 @@ keywords:
   - AI agent observability
 published: true
 featured: false
-aiAssisted: true
+aiAssisted: generated
 author: Ziang Ren
 ---
 

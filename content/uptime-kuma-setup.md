@@ -20,7 +20,7 @@ keywords:
   - IP allowlist
 published: true
 featured: false
-aiAssisted: true
+aiAssisted: assisted
 author: Ziang Ren
 ---
 

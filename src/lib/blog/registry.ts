@@ -12,7 +12,7 @@ import blogRegistry from '../../../public/blog-registry.json'
  * Get all posts from the registry (raw, unfiltered)
  */
 export function getBlogRegistry(): BlogPost[] {
-  return blogRegistry.posts
+  return blogRegistry.posts as BlogPost[]
 }
 
 /**

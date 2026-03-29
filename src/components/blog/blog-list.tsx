@@ -395,7 +395,7 @@ export default function BlogList({
                             {post.aiAssisted && (
                               <div className="flex items-center gap-1 text-muted-foreground/70">
                                 <Sparkles className="h-3 w-3" />
-                                <span>AI assisted</span>
+                                <span>{post.aiAssisted === 'generated' ? 'AI generated' : 'AI assisted'}</span>
                               </div>
                             )}
                           </div>

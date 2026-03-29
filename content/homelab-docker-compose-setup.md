@@ -15,7 +15,7 @@ keywords:
   - Docker networking
 published: true
 featured: false
-aiAssisted: true
+aiAssisted: assisted
 author: Ziang Ren
 collection: homelab-journey
 episode: 3
