@@ -48,11 +48,6 @@ export const metadata: Metadata = {
     description:
       "Personal website of Ziang Ren - Software Engineer, Blogger, and Tech Enthusiast",
   },
-  alternates: {
-    types: {
-      "application/rss+xml": "https://about.ziangren.com/feed.xml",
-    },
-  },
 };
 
 export default function RootLayout({

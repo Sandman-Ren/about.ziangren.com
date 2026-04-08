@@ -30,10 +30,6 @@ const OUTPUT_DIR = path.join(ROOT_DIR, 'src', 'content', 'blog')
 const REGISTRY_PATH = path.join(ROOT_DIR, 'public', 'blog-registry.json')
 const COLLECTIONS_PATH = path.join(CONTENT_DIR, 'collections.yaml')
 const COLLECTIONS_REGISTRY_PATH = path.join(ROOT_DIR, 'public', 'collections-registry.json')
-const LLMS_TXT_PATH = path.join(ROOT_DIR, 'public', 'llms.txt')
-const LLMS_FULL_TXT_PATH = path.join(ROOT_DIR, 'public', 'llms-full.txt')
-const FEED_XML_PATH = path.join(ROOT_DIR, 'public', 'feed.xml')
-const SITE_URL = 'https://about.ziangren.com'
 
 /**
  * Ensure a directory exists
@@ -161,125 +157,6 @@ function buildCollectionsRegistry(collectionDefs, posts) {
 }
 
 /**
- * Escape XML special characters
- */
-function escapeXml(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;')
-}
-
-/**
- * Generate llms.txt - site overview with links to all blog posts
- * Follows the llms.txt specification (https://llmstxt.org)
- */
-function generateLlmsTxt(posts) {
-  const lines = [
-    '# Ziang Ren - Personal Website & Blog',
-    '',
-    '> Personal website and tech blog by Ziang Ren — Software Engineer, Blogger, and Tech Enthusiast. Topics include self-hosting, homelab, web development, TypeScript, Docker, DevOps, and AI agents.',
-    '',
-    '## Blog Posts',
-    '',
-  ]
-
-  for (const post of posts) {
-    lines.push(`- [${post.title}](${SITE_URL}/blog/${post.slug}/): ${post.summary}`)
-  }
-
-  lines.push('')
-  lines.push('## Optional')
-  lines.push('')
-  lines.push(`- [Full blog content for LLMs](${SITE_URL}/llms-full.txt)`)
-  lines.push(`- [RSS Feed](${SITE_URL}/feed.xml)`)
-  lines.push(`- [Sitemap](${SITE_URL}/sitemap.xml)`)
-  lines.push('')
-
-  fs.writeFileSync(LLMS_TXT_PATH, lines.join('\n'), 'utf-8')
-  console.log(`🤖 Generated public/llms.txt`)
-}
-
-/**
- * Generate llms-full.txt - full markdown content of all blog posts
- * Provides complete blog content in a single LLM-consumable file
- */
-function generateLlmsFullTxt(posts, contentMap) {
-  const lines = [
-    '# Ziang Ren - Personal Website & Blog (Full Content)',
-    '',
-    '> Complete blog content for LLM consumption. See also: llms.txt for an overview.',
-    '',
-  ]
-
-  for (const post of posts) {
-    lines.push('---')
-    lines.push('')
-    lines.push(`# ${post.title}`)
-    lines.push('')
-    lines.push(`- **URL**: ${SITE_URL}/blog/${post.slug}/`)
-    lines.push(`- **Date**: ${post.date}`)
-    lines.push(`- **Author**: ${post.author}`)
-    lines.push(`- **Tags**: ${post.tags.join(', ')}`)
-    lines.push(`- **Reading time**: ${post.readingTime} min`)
-    lines.push('')
-    lines.push(`> ${post.summary}`)
-    lines.push('')
-
-    const content = contentMap[post.slug]
-    if (content) {
-      lines.push(content.trim())
-    }
-
-    lines.push('')
-  }
-
-  fs.writeFileSync(LLMS_FULL_TXT_PATH, lines.join('\n'), 'utf-8')
-  console.log(`🤖 Generated public/llms-full.txt`)
-}
-
-/**
- * Generate feed.xml - RSS 2.0 feed for all blog posts
- */
-function generateRssFeed(posts) {
-  const now = new Date().toUTCString()
-
-  const items = posts.map(post => {
-    const pubDate = new Date(post.date).toUTCString()
-    const categories = post.tags.map(tag => `      <category>${escapeXml(tag)}</category>`).join('\n')
-
-    return `    <item>
-      <title>${escapeXml(post.title)}</title>
-      <link>${SITE_URL}/blog/${post.slug}/</link>
-      <guid isPermaLink="true">${SITE_URL}/blog/${post.slug}/</guid>
-      <description>${escapeXml(post.summary)}</description>
-      <pubDate>${pubDate}</pubDate>
-      <author>ziangren@example.com (${escapeXml(post.author)})</author>
-${categories}
-    </item>`
-  }).join('\n')
-
-  const feed = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Ziang Ren - Blog</title>
-    <link>${SITE_URL}/blog/</link>
-    <description>Tech blog by Ziang Ren — self-hosting, homelab, web development, TypeScript, Docker, DevOps, and AI agents.</description>
-    <language>en-us</language>
-    <lastBuildDate>${now}</lastBuildDate>
-    <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
-${items}
-  </channel>
-</rss>
-`
-
-  fs.writeFileSync(FEED_XML_PATH, feed, 'utf-8')
-  console.log(`📡 Generated public/feed.xml`)
-}
-
-/**
  * Process all notes and generate outputs
  */
 function processNotes() {
@@ -294,7 +171,6 @@ function processNotes() {
 
   const posts = []
   const publishedSlugs = []
-  const contentMap = {} // slug → markdown content (for llms-full.txt)
 
   // Ensure output directory exists
   ensureDir(OUTPUT_DIR)
@@ -349,7 +225,6 @@ function processNotes() {
       }
       const mdxPath = path.join(OUTPUT_DIR, `${file.slug}.mdx`)
       fs.writeFileSync(mdxPath, mdxContent, 'utf-8')
-      contentMap[file.slug] = content.trim()
       console.log(`  ✅ ${file.slug}.md → src/content/blog/${file.slug}.mdx`)
     } else {
       console.log(`  ⏸️  ${file.slug}.md (unpublished, skipped)`)
@@ -391,11 +266,6 @@ export type CollectionSlug = (typeof collectionSlugs)[number]
 `
   fs.writeFileSync(path.join(OUTPUT_DIR, 'collection-slugs.ts'), collectionSlugsContent, 'utf-8')
   console.log(`📋 Generated src/content/blog/collection-slugs.ts (${collectionSlugsList.length} collection slugs)`)
-
-  // Generate LLM and scraper-friendly files
-  generateLlmsTxt(posts)
-  generateLlmsFullTxt(posts, contentMap)
-  generateRssFeed(posts)
 
   console.log('\n✨ Import complete!\n')
 

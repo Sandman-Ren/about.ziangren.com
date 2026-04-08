@@ -67,36 +67,9 @@ export default async function BlogPost({ params }: BlogPostPageProps) {
 
   const collectionContext = getCollectionForPost(slug)
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    description: post.summary,
-    datePublished: post.date,
-    dateModified: post.lastModified || post.date,
-    author: {
-      '@type': 'Person',
-      name: post.author || 'Ziang Ren',
-      url: 'https://about.ziangren.com',
-    },
-    keywords: post.keywords.join(', '),
-    url: `https://about.ziangren.com/blog/${slug}`,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://about.ziangren.com/blog/${slug}`,
-    },
-    ...(post.coverImage && { image: post.coverImage }),
-  }
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <BlogPostPage post={post} collectionContext={collectionContext}>
-        <Content />
-      </BlogPostPage>
-    </>
+    <BlogPostPage post={post} collectionContext={collectionContext}>
+      <Content />
+    </BlogPostPage>
   )
 }
