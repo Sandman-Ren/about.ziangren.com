@@ -1,0 +1,25 @@
+# Ziang Ren - Personal Website & Blog
+
+> Personal website and tech blog by Ziang Ren — Software Engineer, Blogger, and Tech Enthusiast. Topics include self-hosting, homelab, web development, TypeScript, Docker, DevOps, and AI agents.
+
+## Blog Posts
+
+- [Hardening an Autonomous AI Agent: How I Deployed OpenClaw on a Mac Mini](https://about.ziangren.com/blog/hardening-autonomous-ai-agent-mac-mini/): Running an autonomous AI agent at home means treating it like untrusted code. Here's how I locked down OpenClaw with firewall rules, egress filtering, container isolation, model fallback chains, and centralized observability — all on a Mac Mini.
+- [Self-Hosted Monitoring with Uptime Kuma: Docker Container and HTTP Endpoint Monitoring](https://about.ziangren.com/blog/uptime-kuma-setup/): A complete guide to setting up Uptime Kuma for self-hosted monitoring with Docker container health checks, HTTP endpoint monitoring, Traefik integration with IP allowlisting, and email alerts via Resend SMTP.
+- [Setting Up OAuth2 Authentication with Keycloak and Traefik: A Troubleshooting Journey](https://about.ziangren.com/blog/oauth2-keycloak-traefik-setup/): A comprehensive guide to configuring OAuth2-Proxy, Keycloak, and Traefik for self-hosted application authentication, covering common pitfalls like hairpin NAT, Vault sealing, and Docker API version mismatches.
+- [Typography Showcase](https://about.ziangren.com/blog/typography-showcase/): A comprehensive demonstration of all typography styles, components, and formatting options available in our blog posts. This post serves as both a style guide and visual test.
+- [TypeScript Generics: A Practical Guide](https://about.ziangren.com/blog/typescript-generics-guide/): Generics are one of TypeScript's most powerful features. This guide covers the core patterns you'll use every day — from simple type parameters to conditional types.
+- [Understanding CSS Grid Layout](https://about.ziangren.com/blog/understanding-css-grid/): A practical guide to CSS Grid — the most powerful layout system in CSS. Learn the core concepts, common patterns, and when to choose Grid over Flexbox.
+- [Homelab Journey: Docker Compose for Everything](https://about.ziangren.com/blog/homelab-docker-compose-setup/): Docker Compose is the backbone of my homelab. Here's how I structure my deployments, manage configurations, and keep services running smoothly.
+- [Homelab Journey: Installing and Configuring the OS](https://about.ziangren.com/blog/homelab-installing-proxmox/): With hardware ready, it's time to install the operating system. I walk through my Ubuntu Server setup, initial configuration, and security hardening.
+- [Homelab Journey: Choosing the Right Hardware](https://about.ziangren.com/blog/homelab-choosing-hardware/): The first step in building a homelab is picking the right hardware. Here's how I chose my server components and what I'd do differently.
+- [Building My Own Server](https://about.ziangren.com/blog/building-my-own-server/): Documenting the process of setting up a single-node self-hosted server with secrets management, identity provider, deploying public-facing applications and monitor using Grafana Alloy and Dashboard
+- [Welcome to My New Blog](https://about.ziangren.com/blog/welcome-to-my-new-blog/): Introducing my new blog built with Next.js, MDX, and modern web technologies. Learn about the features, technologies used, and what you can expect from future posts.
+- [Building Modern React Applications with TypeScript](https://about.ziangren.com/blog/building-modern-react-typescript/): A comprehensive guide to building scalable React applications using TypeScript, covering best practices, patterns, and advanced techniques.
+- [My Journey in Computer Science: From Curiosity to Career](https://about.ziangren.com/blog/my-cs-journey/): Reflecting on my path through computer science education, internships, and building a career in tech, sharing lessons learned and advice for aspiring developers.
+
+## Optional
+
+- [Full blog content for LLMs](https://about.ziangren.com/llms-full.txt)
+- [RSS Feed](https://about.ziangren.com/feed.xml)
+- [Sitemap](https://about.ziangren.com/sitemap.xml)
