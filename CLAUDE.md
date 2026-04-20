@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal website and blog for Ziang Ren (about.ziangren.com). Built with Next.js 15 App Router, statically exported for GitHub Pages hosting.
+Personal website and blog for Ziang Ren (about.ziangren.com). Built with Next.js 15 App Router, statically exported (`output: 'export'`) and deployed to Cloudflare Workers (static-assets mode). Cloudflare serves the site directly from its edge — no separate origin host.
 
 ## Commands
 
@@ -102,10 +102,14 @@ import { springs, fadeInUp, transitions } from '@/lib/animations'
 
 ### Static Export
 
-Configured for GitHub Pages:
+Configured as a Next.js static export, deployed to Cloudflare Workers:
 - `output: 'export'` in next.config.ts
 - `trailingSlash: true` for proper routing
 - `images.unoptimized: true` (no Image Optimization API)
+
+Deploy target: Cloudflare Workers static assets. The Worker is `about-ziangren-com`; its `*.workers.dev` subdomain is disabled so the site is only reachable through the custom domain. Cloudflare handles DNS, TLS termination, caching, and security headers. Apex and `www` redirect to `about.ziangren.com` via a Cloudflare Redirect Rule.
+
+Deploy config lives in `wrangler.jsonc`. Security + cache headers are authored in `public/_headers` (copied into `out/` during build via `scripts/copy-cloudflare-config.mjs`). CI is `.github/workflows/deploy-workers.yml` — push to `main` runs `npm ci && npm run build && wrangler deploy`.
 
 ## Testing
 
