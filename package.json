@@ -7,7 +7,7 @@
     "new-note": "node scripts/new-note.js",
     "import-notes": "node scripts/import-notes.js",
     "dev": "npm run import-notes && next dev",
-    "build": "npm run import-notes && next build",
+    "build": "npm run import-notes && next build && node scripts/copy-cloudflare-config.mjs",
     "start": "next start",
     "lint": "next lint",
     "test": "playwright test",

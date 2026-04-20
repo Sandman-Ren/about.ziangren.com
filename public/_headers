@@ -1,0 +1,22 @@
+# Security headers applied by Cloudflare Workers static assets.
+# Reference: https://developers.cloudflare.com/workers/static-assets/headers/
+#
+# ROLLOUT NOTE — CSP is shipped in Report-Only mode for 1 week.
+# After a week with no unexpected console violations, rename the header
+# "Content-Security-Policy-Report-Only" to "Content-Security-Policy" to enforce.
+# See docs/secure-static-site-playbook.md §II.3 in the workspace root.
+
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'; upgrade-insecure-requests
+
+# Long-lived immutable cache for Next.js hashed build artifacts.
+# Filenames contain content hashes, so the browser can safely cache forever.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
